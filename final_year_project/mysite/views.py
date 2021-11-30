@@ -18,3 +18,6 @@ def donate_tiles(request):
 
 def login(request):
     return render(request, 'mysite/login.html')
+
+def logout(request):
+    return render(request, 'mysite/login.html')
