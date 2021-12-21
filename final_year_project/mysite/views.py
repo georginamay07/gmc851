@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
 
-def homepage(request):
+def home(request):
     return render(request, 'mysite/homepage.html')
 
 def news(request):
@@ -19,5 +19,5 @@ def donate_tiles(request):
 def login(request):
     return render(request, 'mysite/login.html')
 
-def logout(request):
-    return render(request, 'mysite/login.html')
+def signup(request):
+    return render(request, 'mysite/signup.html')

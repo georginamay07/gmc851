@@ -3,24 +3,26 @@
     <head>
         <title>The Barber Institute</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>        
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>   
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
         <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+       
+
     </head>
     <body>
     <nav class="navbar navbar-custom navbar-fixed-top">
         <div class="container-fluid">
             <ul class="nav navbar-nav navbar-left">
-                <li><a href="{% url 'homepage' %}">Barber Institute</a></li>
+                <li><a href="{% url 'home' %}">Barber Institute</a></li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="{% url 'news' %}">News</a></li>
                 <li><a href="{% url 'events' %}">Events</a></li>
                 <li><a href="{% url 'donate' %}">Donate</a></li>
                 <li><a href="{% url 'donate_tiles'%}">Barber Tiles</a>
-                <li><a href="{% url 'logout' %}">Logout</a></li>
+                <li><a href="{% url 'login' %}">Logout</a></li>
                   
             </ul>
 
@@ -30,8 +32,9 @@
         <footer class="page-footer">
 
             <!-- Copyright -->
-            <div class="footer-copyright text-center py-3">Enquiries:                                         
-              <a href="mailto: GMC851@student.bham.ac.uk">GMC851@student.bham.ac.uk</a>
+            <div class="footer-copyright text-center py-3"> 
+              <a style="float:right;font-size: 25px;padding-left:10px;padding-right:10px;" href="https://twitter.com/BarberInstitute?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor" class="fa fa-twitter"></a>
+              <a style="float:right;font-size: 25px;" href="https://www.instagram.com/barberinstitute/?hl=en" class="fa fa-instagram"></a>
             </div>
             <!-- Copyright -->
           
@@ -49,6 +52,7 @@
         padding-top:50px;
         margin-bottom:50px;
         color:black;
+        background-color:#EBF5FB;
     }
     
     #page-header{
@@ -68,7 +72,6 @@
         height: 50px;
         margin-bottom: 0px !important;
         font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
-        box-shadow: 10px 10px 5px 5px #D3D3D3;
     
     }
         .nav.navbar-nav.navbar-right li a{
@@ -112,4 +115,5 @@
     .footer-copyright a {
         text-decoration: none;
     }
+
 </style>
