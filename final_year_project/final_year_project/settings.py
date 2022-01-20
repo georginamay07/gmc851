@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'final_year_project',
 ]
 
 MIDDLEWARE = [
@@ -74,25 +75,27 @@ WSGI_APPLICATION = 'final_year_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-    
-    
-}
 #DATABASES = {
-#        'default': {
-#            "ENGINE": "mssql",
-#            "NAME": "Final Year Project",
-#            "USER": "georg",
-#            "PASSWORD": "DanielCraig007",
-#            "HOST": "127.0.0.0.1",
-#            "PORT": "8000",
-#            "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server", },
-#            }
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': BASE_DIR / 'db.sqlite3',
+#    }
+    
+    
 #}
+DATABASES = {
+    "default": {
+        "ENGINE": "mssql",
+        "NAME": "georginadb",
+        "USER": "MyLogin",
+        "PASSWORD": "DanielCraig007",
+        "HOST": "localhost",
+        "PORT": "1433",
+        "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server", 
+        },
+    },
+}
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
