@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,6 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Application definition
 
@@ -37,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'final_year_project',
+    'mysite'
 ]
 
 MIDDLEWARE = [
@@ -75,26 +78,26 @@ WSGI_APPLICATION = 'final_year_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': BASE_DIR / 'db.sqlite3',
-#    }
-    
-    
-#}
 DATABASES = {
-    "default": {
-        "ENGINE": "mssql",
-        "NAME": "georginadb",
-        "USER": "MyLogin",
-        "PASSWORD": "DanielCraig007",
-        "HOST": "localhost",
-        "PORT": "1433",
-        "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server", 
-        },
-    },
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+    
+    
 }
+#DATABASES = {
+#    "default": {
+#        "ENGINE": "mssql",
+#        "NAME": "georginadb",
+ #       "USER": "MyLogin",
+ #       "PASSWORD": "DanielCraig007",
+ #       "HOST": "localhost",
+ #       "PORT": "1433",
+ #       "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server", 
+ #       },
+ #   },
+#}
 
 
 # Password validation

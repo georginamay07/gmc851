@@ -1,7 +1,14 @@
 {% extends 'mysite/base.html' %}
-<html>
-    <p> Test </p>
 
-</html>
-<style>
-</style>
+{% block body %}
+
+{% for post in posts %}
+
+    <article>
+        <h2><a href="">{{ post.artist }}</a></h2>
+        <img src={{post.cover_image.url}}></img>
+        <p>{{ post.content|linebreaksbr }}</p>
+    </article>
+{% endfor %}
+
+{% endblock body %}

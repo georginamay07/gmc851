@@ -1,14 +1,21 @@
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404
+from .models import Article
+from .models import Event
+from .models import Post
+from django.utils import timezone
 
 def home(request):
-    return render(request, 'mysite/homepage.html')
+    posts = Post.objects.filter(published_on__lte=timezone.now()).order_by('published_on')
+    return render(request, 'mysite/homepage.html', {'posts': posts})
 
 def news(request):
-    return render(request, 'mysite/news.html')
+    articles = Article.objects.filter(published_on__lte=timezone.now()).order_by('published_on')
+    return render(request, 'mysite/news.html', {'articles':articles})
 
 def events(request):
-    return render(request, 'mysite/events.html')
+    events = Event.objects.order_by('date')
+    return render(request, 'mysite/events.html', {'events': events})
 
 def donate(request):
     return render(request, 'mysite/donate.html')

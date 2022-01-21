@@ -1,1 +1,15 @@
 {% extends 'mysite/base.html' %}
+
+{% block body %}
+
+{% for event in events %}
+
+    <article>
+        <h2><a href="">{{ event.title }}</a></h2>
+        <time>Event Date: {{ event.date}}</time>
+        <img src={{event.cover_image.url}}></img>
+        <p>{{ event.content|linebreaksbr }}</p>
+    </article>
+{% endfor %}
+
+{% endblock body %}

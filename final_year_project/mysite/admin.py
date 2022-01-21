@@ -2,8 +2,8 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Posts, News, Events
+from .models import Post, Article, Event
 
-admin.site.register(Posts)
-admin.site.register(News)
-admin.site.register(Events)
+admin.site.register(Post)
+admin.site.register(Article)
+admin.site.register(Event)

@@ -29,6 +29,8 @@
         </div>
     </nav>
         
+    {% block body %}{% endblock body %}
+
         <footer class="page-footer">
 
             <!-- Copyright -->
@@ -115,5 +117,10 @@
     .footer-copyright a {
         text-decoration: none;
     }
-
+    .article {
+        margin:0;
+        padding:0;
+        background-color:white;
+        box-shadow: 5px 5px;
+    }
 </style>
