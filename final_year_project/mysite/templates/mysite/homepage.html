@@ -3,12 +3,22 @@
 {% block body %}
 
 {% for post in posts %}
-
+    <div class="posts">
     <article>
-        <h2><a href="">{{ post.artist }}</a></h2>
-        <img src={{post.cover_image.url}}></img>
-        <p>{{ post.content|linebreaksbr }}</p>
+        <img class="post_image" width=400 src={{post.cover_image.url}}></img>
+        <h2 class="post_artist">{{ post.artist }}</h2>
+        <p class="post_content">{{ post.content|linebreaksbr }}</p>
+        <button class="like">Like</button>
+        <button onclick="location.href='{% url "donate" %}'" class="donate">Donate</button>
+        <form  action="/html/tags/html_form_tag_action.cfm" method="post">
+            <div>
+            <textarea class="article_comments" placeholder="Add a comment..." id="comments"></textarea>
+            </div>
+            <input class="comment_submit" type="submit" value="Submit">
+            </form>
+
     </article>
+</div>
 {% endfor %}
 
 {% endblock body %}

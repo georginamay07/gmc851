@@ -5,10 +5,17 @@
 {% for article in articles %}
     <div class="article">
     <article>
-        <h2><a href="">{{ article.title }}</a></h2>
-        <time>published: {{ article.published_on }}</time>
-        <img src={{article.cover_image.url}} width=400></img>
-        <p>{{ article.content|linebreaksbr }}</p>
+        <h2 class="article_title">{{ article.title }}</h2>
+        <img class="article_image" src={{article.cover_image.url}} width=400></img>
+        <p class="article_content">{{ article.content|linebreaksbr }}</p>
+        <time class="article_time">published: {{ article.published_on }}</time>
+        <form  action="/html/tags/html_form_tag_action.cfm" method="post">
+            <div>
+            <textarea class="article_comments" style="width:90%; float:left;" placeholder="Add a comment..." id="comments"></textarea>
+            </div>
+            <input class="comment_submit" type="submit" value="Submit">
+            </form>
+
     </article>
 </div>
 {% endfor %}

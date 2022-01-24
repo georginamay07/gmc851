@@ -3,13 +3,15 @@
 {% block body %}
 
 {% for event in events %}
-
+    <div class="article">
     <article>
-        <h2><a href="">{{ event.title }}</a></h2>
-        <time>Event Date: {{ event.date}}</time>
-        <img src={{event.cover_image.url}}></img>
-        <p>{{ event.content|linebreaksbr }}</p>
+        <h2 class="article_title">{{ event.title }}</h2>
+        <img class="article_image" src={{event.cover_image.url}} width=400></img>
+        <p class="article_content">{{ event.content|linebreaksbr }}</p>
+        <time class="article_time">Event Date: {{ event.date}}</time>
+
     </article>
+</div>
 {% endfor %}
 
 {% endblock body %}

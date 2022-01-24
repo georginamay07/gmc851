@@ -8,6 +8,9 @@
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
         <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
        
 
     </head>
@@ -30,6 +33,9 @@
     </nav>
         
     {% block body %}{% endblock body %}
+    
+
+    
 
         <footer class="page-footer">
 
@@ -41,10 +47,11 @@
             <!-- Copyright -->
           
           </footer>
-    </body>
-</html>
+    </body></html>
 
 <style>
+
+    
     h1 a, h2 a {
         color: #87CEEB;
         font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
@@ -52,7 +59,7 @@
     }
     body {
         padding-top:50px;
-        margin-bottom:50px;
+        padding-bottom:50px;
         color:black;
         background-color:#EBF5FB;
     }
@@ -117,10 +124,240 @@
     .footer-copyright a {
         text-decoration: none;
     }
+
     .article {
-        margin:0;
-        padding:0;
-        background-color:white;
+        padding:20px;
         box-shadow: 5px 5px;
+        background-color:white;
+        margin:20px;
+        box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+        overflow:auto;
+    }
+
+    .article_title {
+        color: black;
+        margin:0;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        font-weight:bold;
+        padding-bottom:20px;
+
+    }
+
+    .article_content{
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        display:flex;
+        }
+
+    .article_time {
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        font-weight:bold;
+    }
+
+    .article_image{
+        float:right;
+        margin-bottom:20px;
+    }
+
+    .article_comments{
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        width:100%;    
+    }
+
+    .comment_submit{
+        border-color: grey;
+        color: black;
+        padding: 8px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        float:right;
+        font-size: 16px;
+        margin: 4px 2px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        border-radius:8px;
+
+    
+    }
+
+    .comment_submit:hover{
+        background-color: #3786a6;
+        color:white;
+    }
+
+
+    .posts{
+        padding:20px;
+        box-shadow: 5px 5px;
+        background-color:white;
+        margin:20px;
+        box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+        overflow:auto; 
+        width:500;
+        margin-left:30%;
+    }
+
+    .post_artist{
+        color: black;
+        margin-top :10px;;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        font-weight:bold;
+        padding-bottom:20px;
+        font-size:15pt;
+    }
+
+    .post_content{
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        display:flex;
+    }
+
+    .post_image{
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .donate{
+        border-color: grey;
+        color: black;
+        padding: 8px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        float:right;
+        font-size: 16px;
+        margin: 4px 2px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        border-radius:8px;
+
+    }
+
+    .like{
+        border-color: grey;
+        color: black;
+        padding: 8px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        float:right;
+        font-size: 16px;
+        margin: 4px 2px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        border-radius:8px;
+    }
+
+    .donate:hover{
+        background-color: #3786a6;
+        color:white;
+    }
+
+    .like:hover{
+        background-color: #3786a6;
+        color:white;
+    }
+
+    .donate_text{
+        text-align: center;
+        margin:20px;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        font-size:15pt;
+        font-weight:bold;
+
+    }
+
+    .donate_div{
+        box-shadow: 5px 5px;
+        background-color:white;
+        margin: 10px 150px 10px 150px;
+        height:400;
+        box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+        overflow:auto;
+    }
+
+    .donate_title {
+        color: black;
+        margin:20;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        font-weight:bold;
+        padding-bottom:20px;
+
+    }
+
+    .money_button{
+        border-color: grey;
+        color: white;
+        background-color:#3786a6;
+        padding: 32px 50px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        float:left;
+        font-size: 16px;
+        margin: 10px 20px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        font-weight:bold;
+
+    }
+    .money_button:hover {
+        background-color:red;
+
+    }
+    .money_button:focus {
+        background-color:red;
+
+    }
+
+    .custom_money_button{
+        border-color: grey;
+        color: black;
+        padding: 32px 50px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        float:left;
+        font-size: 16px;
+        margin: 10px 20px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        font-weight:bold;
+
+    }
+
+    .donate_image{
+        text-align:center;
+        margin:auto;
+        padding-top:140px;
+        padding-right:30px;
+
+    }
+
+    .donate_button {
+        border-color: grey;
+        color: black;
+        padding: 8px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin-top:20px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        border-radius:8px;
+    }
+
+    .donate_button:hover{
+        background-color: #3786a6;
+        color:white;
+    }
+
+    .tiles_header {
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        font-weight:bold;
+        color:black;
+        font-size:80px;
+        text-align: center;
     }
 </style>

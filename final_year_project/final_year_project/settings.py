@@ -31,6 +31,10 @@ ALLOWED_HOSTS = []
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+PAYPAL_RECEIVER_EMAIL = 'sb-43ae0b12114389@business.example.com'
+
+PAYPAL_TEST = True
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,7 +44,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'mysite'
+    'mysite',
+    'taggit',
+    'paypal.standard.ipn'
 ]
 
 MIDDLEWARE = [

@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from taggit.managers import TaggableManager
 
 # Create your models here.
 
@@ -42,7 +43,7 @@ class Post(models.Model):
     content = models.TextField()
     cover_image = models.ImageField(upload_to='images/')
     published_on = models.DateTimeField(blank=True, null=True)
-
+    tags = TaggableManager()
 
     def __str__(self):
         self.published_on=timezone.now()
