@@ -88,22 +88,20 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    },
+    'users': {
+        "ENGINE": "mssql",
+        "NAME": "georginadb",
+        "USER": "MyLogin",
+        "PASSWORD": "DanielCraig007",
+        "HOST": "localhost",
+        "PORT": "1433",
+        "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server", 
+        },
+    },
     
     
 }
-#DATABASES = {
-#    "default": {
-#        "ENGINE": "mssql",
-#        "NAME": "georginadb",
- #       "USER": "MyLogin",
- #       "PASSWORD": "DanielCraig007",
- #       "HOST": "localhost",
- #       "PORT": "1433",
- #       "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server", 
- #       },
- #   },
-#}
 
 
 # Password validation

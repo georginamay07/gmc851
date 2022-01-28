@@ -10,7 +10,9 @@
         <p class="post_content">{{ post.content|linebreaksbr }}</p>
         <button class="like">Like</button>
         <button onclick="location.href='{% url "donate" %}'" class="donate">Donate</button>
-        <form  action="/html/tags/html_form_tag_action.cfm" method="post">
+        <br></br>
+        <br></br>
+        <form action="/html/tags/html_form_tag_action.cfm" method="post">
             <div>
             <textarea class="article_comments" placeholder="Add a comment..." id="comments"></textarea>
             </div>
