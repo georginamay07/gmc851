@@ -1,0 +1,4 @@
+Hello,
+
+Forgot your password?
+We recieved a request to reset the password for your account. To reset your password, please click the link below:

@@ -46,8 +46,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mysite',
     'taggit',
-    'paypal.standard.ipn'
+    'paypal.standard.ipn',
+    'crispy_forms',
+    
 ]
+
+CRISPY_TEMPLATE_PACK =  'bootstrap4'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -79,7 +85,7 @@ TEMPLATES = [
 
 
 WSGI_APPLICATION = 'final_year_project.wsgi.application'
-
+LOGIN_REDIRECT_URL = 'login'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
@@ -89,21 +95,20 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     },
-    'users': {
-        "ENGINE": "mssql",
-        "NAME": "georginadb",
-        "USER": "MyLogin",
-        "PASSWORD": "DanielCraig007",
-        "HOST": "localhost",
-        "PORT": "1433",
-        "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server", 
-        },
-    },
     
-    
+
 }
 
-
+#    'users': {
+#        "ENGINE": "mssql",
+#        "NAME": "georginadb",
+#        "USER": "MyLogin",
+#        "PASSWORD": "DanielCraig007",
+#        "HOST": "localhost",
+#        "PORT": "1433",
+#        "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server", 
+#        },
+#    },
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 

@@ -1,3 +1,5 @@
+{% load crispy_forms_tags %}
+
 <html lang="en">
     <head>
         <title>The Barber Institute</title>
@@ -19,29 +21,23 @@
                     <div class="card-body p-5 text-center">
           
                       <h3 class="mb-5">Login</h3>
-                    <div class="outer-box">
-                      <div class="form-outline mb-4">
-                        <label class="form-label" for="typeEmailX-2" style="color:black;">Your Email</label>
-                        <input type="email" id="typeEmailX-2" class="form-control form-control-lg" />
-                        
-                      </div>
-          
-                      <div  style="padding-bottom:20px;" class="form-outline mb-4">
-                        <label class="form-label" for="typePasswordX-2" style="color:black;">Your Password</label>
+                      <form method="POST">
+                       
+                    <div style="color:black;"class="outer-box">
+                      
+                      {{message}}
+                      {% csrf_token %}
+                      {{login_form|crispy}}
 
-                        <input type="password" id="typePasswordX-2" class="form-control form-control-lg" />
-                      </div>
-          
-          
-                      <button onclick="location.href='{% url 'home' %}'" class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
+                      <button class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
           
                       <hr class="my-4">
           
                       <div style="padding-left:180px;"class="g-signin2" data-onsuccess="onSignIn"></div>  
-                      
+                                        
                     <div>
                       <a style="float:left;" href="{% url 'signup' %}">Create an account</a></li>
-                      <a style="float:right;">Forgotten Password?</a>
+                      <a style="float:right;" href="{% url 'forgotten_password' %}">Forgotten Password?</a>
                     </div>
                     </div>
                     </div>
@@ -78,7 +74,7 @@
         font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
         font-weight: 300;
         color:white;
-        background-image: url('https://bigbangartfund-assets.s3.eu-west-2.amazonaws.com/what-to-see/museums-and-galleries/a-c/barber-institute-of-fine-arts/the-green-galleryls.jpg');
+        background-image: url('https://www.codart.nl/wp-content/uploads/2020/09/BIFA-17th-century-Gallery-scaled.jpg');
         background-repeat:no-repeat;
         background-size:cover;
     }

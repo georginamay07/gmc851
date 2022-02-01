@@ -17,18 +17,25 @@
     <body>
     <nav class="navbar navbar-custom navbar-fixed-top">
         <div class="container-fluid">
+            
             <ul class="nav navbar-nav navbar-left">
                 <li><a href="{% url 'home' %}">Barber Institute</a></li>
+                
             </ul>
             <ul class="nav navbar-nav navbar-right">
+                
                 <li><a href="{% url 'news' %}">News</a></li>
                 <li><a href="{% url 'events' %}">Events</a></li>
                 <li><a href="{% url 'donate' %}">Donate</a></li>
                 <li><a href="{% url 'donate_tiles'%}">Barber Tiles</a>
-                <li><a href="{% url 'login' %}">Logout</a></li>
-                  
-            </ul>
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+                <li style="pointer-events: none;"><a> Welcome, {{user.username}}</a></li>
 
+            </ul>
+           
+
+
+            
         </div>
     </nav>
         
@@ -263,7 +270,6 @@
         margin:20px;
         font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
         font-size:15pt;
-        font-weight:bold;
 
     }
 
