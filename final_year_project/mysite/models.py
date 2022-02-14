@@ -53,3 +53,20 @@ class Post(models.Model):
     def publish(self):
         self.save()
 
+class Like(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
+                       
+    user = models.ForeignKey(User, on_delete=models.CASCADE, 
+        related_name="likes")
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'post'], name="unique_like"),
+        ]
+        
+        
+class Donation(models.Model):
+    amount = models.IntegerField()
+    fave_image = models.ImageField(upload_to='images/tiles/')
+    first_name = models.TextField()
+    last_name = models.TextField()

@@ -46,21 +46,63 @@
 
 <div class="donate_div">
     <h2 class="donate_title">Make a donation</h2>
-    <form action="">
+    <form method="POST">
+      {% csrf_token %}
         <div class="donate_options" style="margin-left:60px;">
-            <button class="money_button">£1.00</button>
-            <button class="money_button">£5.00</button>
-            <button class="money_button">£10.00</button>
-            <input class="custom_money_button" placeholder="£" type="number" min="0.00" max="10000.00" step="1.00" />
+            <input id="amount1" type="radio" value="1" name="amount" class="money_button"> £1.00</input><br>
+            <input id="amount2" type="radio" value="5" name="amount" class="money_button"> £5.00</input><br>
+            <input id="amount3" type="radio" value="10" name="amount" class="money_button"> £10.00</input><br>
         </div>
         <div class="donate_image"
             <label for="img">Upload image:</label>
             <input style="padding-left:40%;" type="file" id="img" name="img" accept="image/*">
-            <button type="submit" class="donate_button">Donate Now</button>
         </div>
-      </form>
 
+        <script src="https://www.paypal.com/sdk/js?client-id=AYdRfbvZj6Qunsj9uWNirrIeqRuGvxxa3x0DS1HmhD0xTFpXnhckGRqZ-vqJDEc4sD_6HYmCYSYv38Av&currency=GBP"></script>
 
+    <!-- Set up a container element for the button -->
+    <div id="paypal-button-container"></div>
+
+    <script>
+      paypal.Buttons({
+
+        // Sets up the transaction when a payment button is clicked
+        createOrder: function(data, actions) {
+          if(document.getElementById('amount1').checked){
+            amount=document.getElementById('amount1').value
+          }
+          else if(document.getElementById('amount2').checked){
+            amount=document.getElementById('amount2').value
+          }
+          else if(document.getElementById('amount3').checked){
+            amount=document.getElementById('amount3').value
+          }
+          return actions.order.create({
+            purchase_units: [{
+              amount: {
+                value: amount
+
+              }
+              
+            }]
+          });
+        },
+
+        // Finalize the transaction after payer approval
+        onApprove: function(data, actions) {
+          return actions.order.capture().then(function(orderData) {
+            // Successful capture! For dev/demo purposes:
+                console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+                var transaction = orderData.purchase_units[0].payments.captures[0];
+                window.location.href='http://127.0.0.1:8000/donate_success/';
+
+          });
+        }
+      }).render('#paypal-button-container');
+
+    </script>
+  </body>
+</html>
 </div>
 
 {% endblock body %}

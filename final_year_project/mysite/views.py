@@ -12,13 +12,18 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
 from django.template.loader import render_to_string
 from django.core.mail import send_mail, BadHeaderError
+from django.conf import settings
+from decimal import Decimal
+from paypal.standard.forms import PayPalPaymentsForm
 
 from .models import Article
 from .models import Event
 from .models import Post
 from .models import User
+from .models import Donation
 from django.utils import timezone
 from django.contrib import messages
+from django.urls import reverse
 
 @login_required(login_url='forbidden')
 def home(request):
@@ -37,11 +42,20 @@ def events(request):
 
 @login_required(login_url='forbidden')
 def donate(request):
+    #Donation.objects.create(amount=request.GET.get('value'), fave_image=request.GET.get('img'), first_name=User.first_name, last_name=User.last_name)
     return render(request, 'mysite/donate.html')
 
 @login_required(login_url='forbidden')
 def donate_tiles(request):
     return render(request, 'mysite/donate_tiles.html')
+
+@login_required(login_url='forbidden')
+def donate_history(request):
+    return render(request, 'mysite/donation_history.html')
+
+@login_required(login_url='forbidden')
+def liked_posts(request):
+    return render(request, 'mysite/liked_posts.html')
 
 def my_login(request):
     if request.method == "POST":
@@ -99,3 +113,11 @@ def password_reset(request):
 
 def forbidden(request):
     return render(request, 'mysite/forbidden_page.html')
+
+@login_required(login_url='forbidden')
+def donate_fail(request):
+    return render(request, 'mysite/donate_failed.html')
+
+@login_required(login_url='forbidden')
+def donate_success(request):
+    return render(request, 'mysite/donate_success.html')

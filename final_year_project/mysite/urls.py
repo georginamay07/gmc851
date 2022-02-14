@@ -13,5 +13,9 @@ urlpatterns = [
     path('logout/', views.my_logout, name="logout"),
     path('forgotpassword/', views.password_reset, name="forgotten_password"),
     path('forbidden/', views.forbidden, name="forbidden"),
+    path('donate_failed/', views.donate_fail, name="donate_fail"),
+    path('donate_success/', views.donate_success, name="donate_success"),
+    path('donate_history/', views.donate_history, name="donate_history"),
+    path('liked_posts/', views.liked_posts, name="liked_posts"),
 
 ] 
