@@ -29,7 +29,12 @@
                 <li><a href="{% url 'donate' %}">Donate</a></li>
                 <li><a href="{% url 'donate_tiles'%}">Barber Tiles</a>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
-                <li style="pointer-events: none;"><a> Welcome, {{user.username}}</a></li>
+                <li class="nav-item dropdown"><a class="nav-link  dropdown-toggle" data-bs-toggle="dropdown"> Welcome, {{user.username}}</a>
+                    <ul style="display:block;" class="dropdown-menu">
+                        <li><a href="{% url 'donate_history'%}">Donation History</a></li>
+                        <li><a href="{% url 'liked_posts'%}">Liked Posts</a></li>
+                      </ul>
+                </li>
 
             </ul>
            
@@ -58,7 +63,6 @@
 
 <style>
 
-    
     h1 a, h2 a {
         color: #87CEEB;
         font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
@@ -97,6 +101,7 @@
             font-size:15pt;
     
         }
+
     .nav.navbar-nav.navbar-right a:hover{
         
         background-color:#4A90AB;
@@ -335,6 +340,27 @@
         font-size:80px;
         text-align: center;
     }
-
+    #donations {
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        border-collapse: collapse;
+        width: 100%;
+        margin-top:20px;
+        margin-left:20px;
+        margin-right:20px;
+    }
+      
+      #donations td, #donations th {
+        border: 1px solid #ddd;
+        padding: 8px;
+        
+      }
+                  
+      #donations th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: left;
+        background-color: #3786a6;
+        color: white;
+      }
 
 </style>

@@ -15,6 +15,8 @@ from django.core.mail import send_mail, BadHeaderError
 from django.conf import settings
 from decimal import Decimal
 from paypal.standard.forms import PayPalPaymentsForm
+from django.http import HttpResponseRedirect
+
 
 from .models import Article
 from .models import Event
@@ -51,11 +53,15 @@ def donate_tiles(request):
 
 @login_required(login_url='forbidden')
 def donate_history(request):
-    return render(request, 'mysite/donation_history.html')
+    donations = Donation.objects.prefetch_related().all()
+    for i in donations:
+        user_donations = Donation.objects.filter(user_id = request.user)
+    return render(request, 'mysite/donation_history.html', {'user_donations': user_donations})
 
 @login_required(login_url='forbidden')
 def liked_posts(request):
-    return render(request, 'mysite/liked_posts.html')
+    posts = Post.objects.filter(published_on__lte=timezone.now()).order_by('published_on')
+    return render(request, 'mysite/liked_posts.html', {'posts':posts})
 
 def my_login(request):
     if request.method == "POST":
@@ -107,9 +113,18 @@ def password_reset(request):
                         send_mail(subject, email, 'barberinstitutetes@example.com', [user.email], fail_silently=False)
                     except BadHeaderError:
                         return HttpResponse('Invalid Header')
-                    return redirect('login')
+                    return redirect('password_reset_sent')
     form = PasswordResetForm()
     return render(request=request, template_name='mysite/forgotten_password.html', context={"password_reset_form":form})
+
+def password_reset_sent(request):
+    return render(request, 'mysite/password_reset_sent.html')
+
+def password_reset_confirm(request):
+    return render(request, 'mysite/password_reset_confirm.html')
+
+def password_reset_complete(request):
+    return render(request, 'mysite/password_reset_complete.html')
 
 def forbidden(request):
     return render(request, 'mysite/forbidden_page.html')
@@ -121,3 +136,6 @@ def donate_fail(request):
 @login_required(login_url='forbidden')
 def donate_success(request):
     return render(request, 'mysite/donate_success.html')
+
+def create_donation(amount, image):
+    donation_instance= Donation.objects.create(amount,image,User.first_name, User.last_name)

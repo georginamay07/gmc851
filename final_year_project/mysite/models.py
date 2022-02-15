@@ -44,6 +44,7 @@ class Post(models.Model):
     content = models.TextField()
     cover_image = models.ImageField(upload_to='images/')
     published_on = models.DateTimeField(blank=True, null=True)
+    like = models.ManyToManyField(User, related_name='post_like')
     tags = TaggableManager()
 
     def __str__(self):
@@ -53,20 +54,27 @@ class Post(models.Model):
     def publish(self):
         self.save()
 
-class Like(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")
-                       
-    user = models.ForeignKey(User, on_delete=models.CASCADE, 
-        related_name="likes")
+#class Like(models.Model):
+#    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="likes")                   
+#    user = models.ForeignKey(User, on_delete=models.CASCADE, 
+#        related_name="likes")
+#    value = models.IntegerField()
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['user', 'post'], name="unique_like"),
-        ]
+
+#    def __str__(self):
+#        return str(self.user) + ':' + str(self.post) +':' + str(self.value)
+
+#    class Meta:
+#       unique_together = ("user", "post", "value")
         
         
 class Donation(models.Model):
     amount = models.IntegerField()
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
     fave_image = models.ImageField(upload_to='images/tiles/')
     first_name = models.TextField()
     last_name = models.TextField()
+    date = models.DateTimeField(auto_now_add=True, null=True)
+    
+    def __str__(self):
+        return str(self.user_id)

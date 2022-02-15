@@ -2,4 +2,19 @@
 
 {% block body %}
 
+{% for post in posts %}
+    <div class="row">
+        <div class="column">
+        <div class="posts">
+        <article>
+            <img class="post_image" width=400 src={{post.cover_image.url}}></img>
+            <h2 class="post_artist">{{ post.artist }}</h2>
+            <button class="like">Like</button>
+            <br></br>
+        </article>
+        </div>
+    </div>
+    </div>
+{% endfor %}
+
 {% endblock body %}
