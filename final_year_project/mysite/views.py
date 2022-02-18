@@ -1,5 +1,8 @@
+from datetime import date
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
+import datetime
+import json
 import requests
 from django.http import HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
@@ -44,7 +47,16 @@ def events(request):
 
 @login_required(login_url='forbidden')
 def donate(request):
-    #Donation.objects.create(amount=request.GET.get('value'), fave_image=request.GET.get('img'), first_name=User.first_name, last_name=User.last_name)
+    if request.method == "POST":   
+        data=request.body      
+        json_data = json.loads(str(data, encoding='utf-8'))
+        print("name"+request.user.first_name)
+        if json_data['amount'] == '1':
+            Donation.objects.create(amount=1, user_id=request.user, fave_image=json_data['fave_image'], first_name=request.user.first_name, last_name=request.user.last_name)
+        if json_data['amount'] == '5':
+            Donation.objects.create(amount=5, user_id=request.user, fave_image=json_data['fave_image'], first_name=request.user.first_name, last_name=request.user.last_name)
+        if json_data['amount'] == '10':
+            Donation.objects.create(amount=10, user_id=request.user, fave_image=json_data['fave_image'], first_name=request.user.first_name, last_name=request.user.last_name)
     return render(request, 'mysite/donate.html')
 
 @login_required(login_url='forbidden')
@@ -136,6 +148,3 @@ def donate_fail(request):
 @login_required(login_url='forbidden')
 def donate_success(request):
     return render(request, 'mysite/donate_success.html')
-
-def create_donation(amount, image):
-    donation_instance= Donation.objects.create(amount,image,User.first_name, User.last_name)

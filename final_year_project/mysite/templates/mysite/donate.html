@@ -46,7 +46,7 @@
 
 <div class="donate_div">
     <h2 class="donate_title">Make a donation</h2>
-    <form method="POST">
+    <form name="donate-form" method="POST">
       {% csrf_token %}
         <div class="donate_options" style="margin-left:60px;">
             <input id="amount1" type="radio" value="1" name="amount" class="money_button"> £1.00</input><br>
@@ -59,9 +59,13 @@
         </div>
 
         <script src="https://www.paypal.com/sdk/js?client-id=AYdRfbvZj6Qunsj9uWNirrIeqRuGvxxa3x0DS1HmhD0xTFpXnhckGRqZ-vqJDEc4sD_6HYmCYSYv38Av&currency=GBP"></script>
+          <!-- Set up a container element for the button -->
+          <div id="paypal-button-container">
+          </div>
+          
+      
+      </form> 
 
-    <!-- Set up a container element for the button -->
-    <div id="paypal-button-container"></div>
 
     <script>
       paypal.Buttons({
@@ -87,14 +91,31 @@
             }]
           });
         },
-
         // Finalize the transaction after payer approval
         onApprove: function(data, actions) {
-          return actions.order.capture().then(function(orderData) {
-            // Successful capture! For dev/demo purposes:
-                console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
-                var transaction = orderData.purchase_units[0].payments.captures[0];
-                window.location.href='http://127.0.0.1:8000/donate_success/';
+          if(document.getElementById('amount1').checked){
+            amount=document.getElementById('amount1').value
+          }
+          else if(document.getElementById('amount2').checked){
+            amount=document.getElementById('amount2').value
+          }
+          else if(document.getElementById('amount3').checked){
+            amount=document.getElementById('amount3').value
+          }
+          image= document.getElementById('img')
+          return fetch('', {
+            method: 'post',
+            headers: {
+              'X-CSRFToken': "{{ csrf_token }}"
+          },
+            body: JSON.stringify({
+              amount: amount,
+              fave_image: image
+            })
+        }).then(function(res) {
+            return res.json();
+        }).then(function(orderData) {
+            window.location.href='http://127.0.0.1:8000/donate_success/';
                 
 
           });
