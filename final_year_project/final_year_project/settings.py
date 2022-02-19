@@ -53,7 +53,19 @@ INSTALLED_APPS = [
 
 CRISPY_TEMPLATE_PACK =  'bootstrap4'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = '587'
+EMAIL_HOST_USER = 'barberinstiutetest@gmail.com'
+EMAIL_HOST_PASSWORD = 'Poppyandruby1'
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+host: EMAIL_HOST
+port: EMAIL_PORT
+username: EMAIL_HOST_USER
+password: EMAIL_HOST_PASSWORD
+use_tls: EMAIL_USE_TLS
+use_ssl: EMAIL_USE_SSL
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

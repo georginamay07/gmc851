@@ -1,6 +1,8 @@
 from django.urls import path,include
 from mysite import views
 from django.contrib import admin
+from django.contrib.auth import views as auth_views 
+
 
 urlpatterns = [
     path('', views.my_login, name="login"),
@@ -12,9 +14,9 @@ urlpatterns = [
     path('signup/', views.signup, name="signup"),
     path('logout/', views.my_logout, name="logout"),
     path('forgotpassword/', views.password_reset, name="forgotten_password"),
-    path('password_reset_confirm/<uidb64>/<token>/', views.password_reset_confirm, name="password_reset_confirm"),
-    path('password_reset_sent/', views.password_reset_sent, name="password_reset_sent"),
-    path('password_reset_complete/', views.password_reset_complete, name="password_reset_complete"),
+    path('password_reset_confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name="mysite/password_reset_confirm.html"), name="password_reset_confirm"),
+    path('password_reset_sent/', auth_views.PasswordResetConfirmView.as_view(template_name="mysite/password_reset_sent.html"), name="password_reset_sent"),
+    path('password_reset_complete/', auth_views.PasswordResetConfirmView.as_view(template_name="mysite/password_reset_complete.html"), name="password_reset_complete"),
     path('forbidden/', views.forbidden, name="forbidden"),
     path('donate_failed/', views.donate_fail, name="donate_fail"),
     path('donate_success/', views.donate_success, name="donate_success"),

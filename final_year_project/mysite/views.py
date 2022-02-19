@@ -7,7 +7,7 @@ import requests
 from django.http import HttpResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from .forms import SignUpForm
+from .forms import ImageForm, SignUpForm
 from django.contrib.auth.forms import PasswordResetForm
 from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
@@ -26,6 +26,7 @@ from .models import Event
 from .models import Post
 from .models import User
 from .models import Donation
+from .models import Comment
 from django.utils import timezone
 from django.contrib import messages
 from django.urls import reverse
@@ -33,7 +34,13 @@ from django.urls import reverse
 @login_required(login_url='forbidden')
 def home(request):
     posts = Post.objects.filter(published_on__lte=timezone.now()).order_by('published_on')
-    return render(request, 'mysite/homepage.html', {'posts': posts})
+    post = None
+    if request.method == 'POST':
+            Comment.objects.create(user_id = request.user,post=request.POST.get('post_artist') ,comment= request.POST['comment'])            
+            post = request.POST.get('post_artist')
+    comments= Comment.objects.filter(published_on__lte=timezone.now()).order_by('published_on')
+    context = {'posts' : posts, 'comments' : comments}
+    return render(request, 'mysite/homepage.html', context=context)
 
 @login_required(login_url='forbidden')
 def news(request):
@@ -47,17 +54,21 @@ def events(request):
 
 @login_required(login_url='forbidden')
 def donate(request):
-    if request.method == "POST":   
+    if request.method == "POST": 
         data=request.body      
         json_data = json.loads(str(data, encoding='utf-8'))
-        print("name"+request.user.first_name)
         if json_data['amount'] == '1':
-            Donation.objects.create(amount=1, user_id=request.user, fave_image=json_data['fave_image'], first_name=request.user.first_name, last_name=request.user.last_name)
+            Donation.objects.create(amount=1, user_id=request.user, first_name=request.user.first_name, last_name=request.user.last_name)
         if json_data['amount'] == '5':
-            Donation.objects.create(amount=5, user_id=request.user, fave_image=json_data['fave_image'], first_name=request.user.first_name, last_name=request.user.last_name)
+            Donation.objects.create(amount=5, user_id=request.user, first_name=request.user.first_name, last_name=request.user.last_name)
         if json_data['amount'] == '10':
-            Donation.objects.create(amount=10, user_id=request.user, fave_image=json_data['fave_image'], first_name=request.user.first_name, last_name=request.user.last_name)
-    return render(request, 'mysite/donate.html')
+            Donation.objects.create(amount=10, user_id=request.user, first_name=request.user.first_name, last_name=request.user.last_name)
+        form = ImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+    else:
+        form = ImageForm()
+    return render(request, 'mysite/donate.html', {'form':form})
 
 @login_required(login_url='forbidden')
 def donate_tiles(request):
@@ -122,21 +133,15 @@ def password_reset(request):
                     c = {"email": user.email, "domain": '127.0.0.1:8000', "site_name": 'The Barber Insitute', "uid": urlsafe_base64_encode(force_bytes(user.pk)), "user":user, "token": default_token_generator.make_token(user), "protocol":"http",}
                     email = render_to_string(email_template_name, c)
                     try:
-                        send_mail(subject, email, 'barberinstitutetes@example.com', [user.email], fail_silently=False)
+                        send_mail(subject, email, 'barberinstiutetest@gmail.com', [user.email],fail_silently=False)
                     except BadHeaderError:
                         return HttpResponse('Invalid Header')
+                    messages.success(request, 'A message with reset password instructions has been sent to your inbox.')
+
                     return redirect('password_reset_sent')
     form = PasswordResetForm()
     return render(request=request, template_name='mysite/forgotten_password.html', context={"password_reset_form":form})
 
-def password_reset_sent(request):
-    return render(request, 'mysite/password_reset_sent.html')
-
-def password_reset_confirm(request):
-    return render(request, 'mysite/password_reset_confirm.html')
-
-def password_reset_complete(request):
-    return render(request, 'mysite/password_reset_complete.html')
 
 def forbidden(request):
     return render(request, 'mysite/forbidden_page.html')

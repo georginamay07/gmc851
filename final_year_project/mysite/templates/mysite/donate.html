@@ -5,27 +5,27 @@
 <div id="myCarousel" class="carousel slide" data-ride="carousel">
 
     <!-- Wrapper for slides -->
-    <div class="carousel-inner" role="listbox">
+    <div style="height:100%;"class="carousel-inner" role="listbox">
 
       <div class="item active">
-        <img style="width:100%;height:80%;object-fit:cover;" src="https://barber.org.uk/wp-content/uploads/2020/12/nk-message.jpg" >
-        <div class="carousel-caption">
+        <img style="width:100%;object-fit:cover;" src="https://barber.org.uk/wp-content/uploads/2020/12/nk-message.jpg" >
+        <div style="padding:400px 0;"class="carousel-caption">
           <h3>Donate</h3>
           <p>The Barber welcomes monetary donations – no matter how large or small. </p>
         </div>
       </div>
 
       <div class="item">
-        <img style="width:100%;height:80%;object-fit:cover;"src="https://artticketsassets.s3.amazonaws.com/barber/ba-talk.jpg">
-        <div class="carousel-caption">
+        <img style="width:100%;object-fit:cover;"src="https://artticketsassets.s3.amazonaws.com/barber/ba-talk.jpg">
+        <div style="padding:400px 0;"class="carousel-caption">
           <h3>Support</h3>
           <p>Your support will help fund exciting and worthwhile Barber projects.</p>
         </div>
       </div>
     
       <div class="item">
-        <img style="width:100%;height:80%;object-fit:cover;"src="https://media.timeout.com/images/102044109/image.jpg">
-        <div class="carousel-caption">
+        <img style="width:100%;object-fit:cover;"src="https://media.timeout.com/images/102044109/image.jpg">
+        <div style="padding:400px 0;"class="carousel-caption">
           <h3>Thank you</h3>
           <p>If you wish to make a substantial donation, please contact the Barber’s Communications and Marketing Manager, Andrew Davies.</p>
         </div>
@@ -40,27 +40,28 @@
       </a>
     </div>
     <p class="donate_text"> Every donation is featured on Barber Tiles. After choosing your donation amount, you can upload a picture of your favourite piece of artwork. 
-        These will then be used to create a virtual tile where your name and image will be features for other users to see! </p>
+        These will then be used to create a virtual tile where your name and image will be featured for other users to see! </p>
     </div>
 </div>
 
 <div class="donate_div">
     <h2 class="donate_title">Make a donation</h2>
-    <form name="donate-form" method="POST">
-      {% csrf_token %}
+    <form id="donate-form" method="POST">
+      
         <div class="donate_options" style="margin-left:60px;">
             <input id="amount1" type="radio" value="1" name="amount" class="money_button"> £1.00</input><br>
             <input id="amount2" type="radio" value="5" name="amount" class="money_button"> £5.00</input><br>
             <input id="amount3" type="radio" value="10" name="amount" class="money_button"> £10.00</input><br>
         </div>
-        <div class="donate_image"
-            <label for="img">Upload image:</label>
-            <input style="padding-left:40%;" type="file" id="img" name="img" accept="image/*">
+        <div class="donate_image">
+          {% csrf_token %}
+          {{form.as_p}}
         </div>
+        
 
-        <script src="https://www.paypal.com/sdk/js?client-id=AYdRfbvZj6Qunsj9uWNirrIeqRuGvxxa3x0DS1HmhD0xTFpXnhckGRqZ-vqJDEc4sD_6HYmCYSYv38Av&currency=GBP"></script>
+        <script src="https://www.paypal.com/sdk/js?client-id=AYdRfbvZj6Qunsj9uWNirrIeqRuGvxxa3x0DS1HmhD0xTFpXnhckGRqZ-vqJDEc4sD_6HYmCYSYv38Av&currency=GBP&disable-funding=credit,card"></script>
           <!-- Set up a container element for the button -->
-          <div id="paypal-button-container">
+          <div type="submit" id="paypal-button-container">
           </div>
           
       
@@ -91,8 +92,10 @@
             }]
           });
         },
+
         // Finalize the transaction after payer approval
         onApprove: function(data, actions) {
+
           if(document.getElementById('amount1').checked){
             amount=document.getElementById('amount1').value
           }
@@ -102,19 +105,16 @@
           else if(document.getElementById('amount3').checked){
             amount=document.getElementById('amount3').value
           }
-          image= document.getElementById('img')
-          return fetch('', {
-            method: 'post',
-            headers: {
-              'X-CSRFToken': "{{ csrf_token }}"
-          },
-            body: JSON.stringify({
-              amount: amount,
-              fave_image: image
-            })
-        }).then(function(res) {
-            return res.json();
-        }).then(function(orderData) {
+          return actions.order.capture().then(function(orderData) {
+            return fetch('', {
+              method: 'post',
+              headers: {
+                'X-CSRFToken': "{{ csrf_token }}"
+            },
+              body: JSON.stringify({
+                amount: amount,
+              })
+            });
             window.location.href='http://127.0.0.1:8000/donate_success/';
                 
 

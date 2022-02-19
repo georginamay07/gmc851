@@ -20,6 +20,8 @@
             
             <ul class="nav navbar-nav navbar-left">
                 <li><a href="{% url 'home' %}">Barber Institute</a></li>
+                <li><a style="font-size:10pt; padding-left:0;"class="username"> Welcome, {{user.username}}</a>
+
                 
             </ul>
             <ul class="nav navbar-nav navbar-right">
@@ -29,14 +31,10 @@
                 <li><a href="{% url 'donate' %}">Donate</a></li>
                 <li><a href="{% url 'donate_tiles'%}">Barber Tiles</a>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
-                <li class="nav-item dropdown"><a class="nav-link  dropdown-toggle" data-bs-toggle="dropdown"> Welcome, {{user.username}}</a>
-                    <ul style="display:block;" class="dropdown-menu">
-                        <li><a href="{% url 'donate_history'%}">Donation History</a></li>
-                        <li><a href="{% url 'liked_posts'%}">Liked Posts</a></li>
-                      </ul>
-                </li>
 
             </ul>
+
+
            
 
 
@@ -50,7 +48,11 @@
     
 
         <footer class="page-footer">
+                    <ul class="nav navbar-nav navbar-left footer_link">
 
+                        <li><a href="{% url 'donate_history'%}">Donation History</a></li>
+                     <li><a href="{% url 'liked_posts'%}">Liked Posts</a></li>
+                    </ul>
             <!-- Copyright -->
             <div class="footer-copyright text-center py-3"> 
               <a style="float:right;font-size: 25px;padding-left:10px;padding-right:10px;" href="https://twitter.com/BarberInstitute?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor" class="fa fa-twitter"></a>
@@ -74,7 +76,6 @@
         color:black;
         background-color:#EBF5FB;
     }
-    
     #page-header{
         color: #ffffff;
         font-size: 15pt;
@@ -86,7 +87,14 @@
         font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
     
     }
-    
+    .nav.navbar-nav.navbar-left.footer_link{
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+
+    }
+    .nav.navbar-nav.navbar-left.footer_link li a:hover{
+        background-color:#4A90AB;
+        color:white;
+    }  
     .navbar-custom {
         background-color: #ffffff;
         height: 50px;
@@ -99,6 +107,10 @@
             padding-left:30px;
             padding-right:30px;
             font-size:15pt;
+    
+        }
+        .nav.navbar-nav.navbar-right.username li a:hover{
+            text-decoration:none; !important
     
         }
 
@@ -282,7 +294,7 @@
         box-shadow: 5px 5px;
         background-color:white;
         margin: 10px 150px 10px 150px;
-        height:500;
+        height:400;
         box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
         overflow:auto;
     }
@@ -293,9 +305,9 @@
         font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
         font-weight:bold;
         padding-bottom:20px;
+        text-align:center;
 
     }
-
     .donate_options{
         text-align:center;
         font-size: 20pt;
@@ -307,6 +319,12 @@
         margin:auto;
         padding-top:30px;
         padding-right:30px;
+
+    }
+    #id_fave_img{
+        text-align:center;
+        margin:auto;
+        padding-left:30px;
 
     }
 
@@ -343,10 +361,10 @@
     #donations {
         font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
         border-collapse: collapse;
-        width: 100%;
+        width: 90%;
         margin-top:20px;
-        margin-left:20px;
-        margin-right:20px;
+        margin-left: auto;
+        margin-right: auto;
     }
       
       #donations td, #donations th {
