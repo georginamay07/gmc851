@@ -7,11 +7,12 @@
     <article>
         <form method="post">
         {% csrf_token %}
+        <input type="hidden" value={{post.pk}} name="pk">
         <img class="post_image" width=400 src={{post.cover_image.url}}></img>
         <h2 name="post_artist" class="post_artist">{{ post.artist }}</h2>
         <p class="post_content">{{ post.content|linebreaksbr }}</p>
-        <button class="like">Like</button>
-        <button onclick="location.href='{% url "donate" %}'" class="donate">Donate</button>
+        <button type="button" class="like">Like</button>
+        <button type="button" onclick="location.href='{% url "donate" %}'" class="donate">Donate</button>
         <br></br>
         <br></br>
             <div>
@@ -23,8 +24,8 @@
         
         <section id="comments">
             <ul style="list-style-type:none;padding-left:0px;padding-top:50px;margin:0;">
-                {% for comment in comments%}
-                <li style="padding-top:20px;"><a style="font-weight:bold;pointer-events: none;color:black;">{{comment.user_id}}  </a><a style="pointer-events: none;color:black;">{{comment.comment}}</a><a style="pointer-events: none;color:black;float:right;">{{comment.published_on}}</a></li>
+                {% for comments in post.commments.all %}
+                <li style="padding-top:20px;"><a style="font-weight:bold;pointer-events: none;color:black;">{{comments.user_id}}  </a><a style="pointer-events: none;color:black;">{{comments.comment}}</a><a style="pointer-events: none;color:black;float:right;">{{comments.published_on}}</a></li>
                 {% endfor %}
             </ul>
         </section>

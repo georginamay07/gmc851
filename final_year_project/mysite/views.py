@@ -21,26 +21,27 @@ from paypal.standard.forms import PayPalPaymentsForm
 from django.http import HttpResponseRedirect
 
 
-from .models import Article
+from .models import Article, BarberTile
 from .models import Event
 from .models import Post
 from .models import User
 from .models import Donation
 from .models import Comment
+from .models import Image
 from django.utils import timezone
 from django.contrib import messages
 from django.urls import reverse
 
 @login_required(login_url='forbidden')
 def home(request):
-    posts = Post.objects.filter(published_on__lte=timezone.now()).order_by('published_on')
-    post = None
     if request.method == 'POST':
-            Comment.objects.create(user_id = request.user,post=request.POST.get('post_artist') ,comment= request.POST['comment'])            
-            post = request.POST.get('post_artist')
-    comments= Comment.objects.filter(published_on__lte=timezone.now()).order_by('published_on')
-    context = {'posts' : posts, 'comments' : comments}
-    return render(request, 'mysite/homepage.html', context=context)
+            post_id = request.POST.get('pk')
+            comment = request.POST['comment']
+            Comment.objects.create(user_id = request.user, comment= comment)    
+            #this_post = Post.objects.get(id=post_id)    
+            #this_post.add(Post.objects.get(id=post_id))    
+    posts = Post.objects.filter(published_on__lte=timezone.now()).order_by('published_on')
+    return render(request, 'mysite/homepage.html', {'posts':posts})
 
 @login_required(login_url='forbidden')
 def news(request):
@@ -54,25 +55,40 @@ def events(request):
 
 @login_required(login_url='forbidden')
 def donate(request):
+    form = ImageForm(request.POST, request.FILES)
     if request.method == "POST": 
-        data=request.body      
-        json_data = json.loads(str(data, encoding='utf-8'))
-        if json_data['amount'] == '1':
-            Donation.objects.create(amount=1, user_id=request.user, first_name=request.user.first_name, last_name=request.user.last_name)
-        if json_data['amount'] == '5':
-            Donation.objects.create(amount=5, user_id=request.user, first_name=request.user.first_name, last_name=request.user.last_name)
-        if json_data['amount'] == '10':
-            Donation.objects.create(amount=10, user_id=request.user, first_name=request.user.first_name, last_name=request.user.last_name)
-        form = ImageForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
+        if 'image_donation' in request.POST:
+            if form.is_valid():
+                form.save() 
+                fave_img = request.FILES['fave_img'].name
+                return render(request, 'mysite/donate.html', {'fave_img':fave_img, 'form':form})
+        else:
+            data=request.body      
+            json_data = json.loads(str(data, encoding='utf-8'))
+            print(json_data)
+            if json_data['amount'] == '1':
+                Donation.objects.create(amount=1, user_id=request.user, first_name=request.user.first_name, last_name=request.user.last_name)
+                #add if statement here so barber tiles are not created if no image is supplied
+                if json_data['fave_image'] is not '':
+                    BarberTile.objects.create(fave_image=json_data['fave_image'],first_name=request.user.first_name, last_name=request.user.last_name, amount=1)
+            if json_data['amount'] == '5':
+                Donation.objects.create(amount=5, user_id=request.user, first_name=request.user.first_name, last_name=request.user.last_name)
+                if json_data['fave_image'] is not '':
+                    BarberTile.objects.create(fave_image=json_data['fave_image'],first_name=request.user.first_name, last_name=request.user.last_name, amount=5)
+            if json_data['amount'] == '10':
+                Donation.objects.create(amount=10, user_id=request.user, first_name=request.user.first_name, last_name=request.user.last_name) 
+                if json_data['fave_image'] is not '':
+                    BarberTile.objects.create(fave_image=json_data['fave_image'],first_name=request.user.first_name, last_name=request.user.last_name, amount=10)
     else:
         form = ImageForm()
     return render(request, 'mysite/donate.html', {'form':form})
 
+
+
 @login_required(login_url='forbidden')
 def donate_tiles(request):
-    return render(request, 'mysite/donate_tiles.html')
+    tiles = BarberTile.objects.prefetch_related().all()
+    return render(request, 'mysite/donate_tiles.html', {'tiles': tiles})
 
 @login_required(login_url='forbidden')
 def donate_history(request):
@@ -120,7 +136,7 @@ def signup(request):
         form = SignUpForm()
     return render(request=request, template_name='mysite/signup.html', context={"signup_form":form})
 
-def password_reset(request):
+def password_reset(request, *args, **kwargs):
     if request.method == "POST":
         form = PasswordResetForm(request.POST)
         if form.is_valid():
@@ -128,16 +144,14 @@ def password_reset(request):
             assoc_users = User.objects.filter(Q(email=email))
             if assoc_users.exists():
                 for user in assoc_users:
-                    subject = "You requested a password reset - Barber Insitute"
+                    subject = "You requested a password reset - Barber Institute"
                     email_template_name = 'mysite/email_template.txt'
-                    c = {"email": user.email, "domain": '127.0.0.1:8000', "site_name": 'The Barber Insitute', "uid": urlsafe_base64_encode(force_bytes(user.pk)), "user":user, "token": default_token_generator.make_token(user), "protocol":"http",}
+                    c = {"email": user.email, "domain": '127.0.0.1:8000', "site_name": 'The Barber Institute', "uid": urlsafe_base64_encode(force_bytes(user.pk)), "user":user, "token": default_token_generator.make_token(user), "protocol":"http",}
                     email = render_to_string(email_template_name, c)
                     try:
                         send_mail(subject, email, 'barberinstiutetest@gmail.com', [user.email],fail_silently=False)
                     except BadHeaderError:
                         return HttpResponse('Invalid Header')
-                    messages.success(request, 'A message with reset password instructions has been sent to your inbox.')
-
                     return redirect('password_reset_sent')
     form = PasswordResetForm()
     return render(request=request, template_name='mysite/forgotten_password.html', context={"password_reset_form":form})

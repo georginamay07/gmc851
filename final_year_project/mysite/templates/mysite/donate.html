@@ -10,7 +10,7 @@
       <div class="item active">
         <img style="width:100%;object-fit:cover;" src="https://barber.org.uk/wp-content/uploads/2020/12/nk-message.jpg" >
         <div style="padding:400px 0;"class="carousel-caption">
-          <h3>Donate</h3>
+          <h3 style="font-weight:bold;">Donate</h3>
           <p>The Barber welcomes monetary donations – no matter how large or small. </p>
         </div>
       </div>
@@ -18,7 +18,7 @@
       <div class="item">
         <img style="width:100%;object-fit:cover;"src="https://artticketsassets.s3.amazonaws.com/barber/ba-talk.jpg">
         <div style="padding:400px 0;"class="carousel-caption">
-          <h3>Support</h3>
+          <h3 style="font-weight:bold;">Support</h3>
           <p>Your support will help fund exciting and worthwhile Barber projects.</p>
         </div>
       </div>
@@ -26,7 +26,7 @@
       <div class="item">
         <img style="width:100%;object-fit:cover;"src="https://media.timeout.com/images/102044109/image.jpg">
         <div style="padding:400px 0;"class="carousel-caption">
-          <h3>Thank you</h3>
+          <h3 style="font-weight:bold;">Thank you</h3>
           <p>If you wish to make a substantial donation, please contact the Barber’s Communications and Marketing Manager, Andrew Davies.</p>
         </div>
       </div>
@@ -39,23 +39,20 @@
         <span class="sr-only">Next</span>
       </a>
     </div>
-    <p class="donate_text"> Every donation is featured on Barber Tiles. After choosing your donation amount, you can upload a picture of your favourite piece of artwork. 
+    <p class="donate_text"> Every donation is featured on Barber Tiles. After uploading a picture of your favourite piece of artwork, you can donate an amount of your choice.
         These will then be used to create a virtual tile where your name and image will be featured for other users to see! </p>
     </div>
 </div>
-
-<div class="donate_div">
-    <h2 class="donate_title">Make a donation</h2>
-    <form id="donate-form" method="POST">
+<div class="row">
+  <div class="column">
+    <div class="donate_div">
+     <h2 class="donate_title">Make a donation</h2>
+     <form id="donate-form" method="POST">
       
         <div class="donate_options" style="margin-left:60px;">
             <input id="amount1" type="radio" value="1" name="amount" class="money_button"> £1.00</input><br>
             <input id="amount2" type="radio" value="5" name="amount" class="money_button"> £5.00</input><br>
             <input id="amount3" type="radio" value="10" name="amount" class="money_button"> £10.00</input><br>
-        </div>
-        <div class="donate_image">
-          {% csrf_token %}
-          {{form.as_p}}
         </div>
         
 
@@ -63,69 +60,90 @@
           <!-- Set up a container element for the button -->
           <div type="submit" id="paypal-button-container">
           </div>
+          <img style="margin-left:35%;"src="https://www.ernestwindows.com/index_files/images/PoweredByPaypal.png" width=150/>
           
       
       </form> 
+      <script>
+        paypal.Buttons({
 
+          // Sets up the transaction when a payment button is clicked
+          createOrder: function(data, actions) {
+            if(document.getElementById('amount1').checked){
+              amount=document.getElementById('amount1').value
+            }
+            else if(document.getElementById('amount2').checked){
+              amount=document.getElementById('amount2').value
+            }
+            else if(document.getElementById('amount3').checked){
+              amount=document.getElementById('amount3').value
+            }
+            return actions.order.create({
+              purchase_units: [{
+                amount: {
+                  value: amount
 
-    <script>
-      paypal.Buttons({
-
-        // Sets up the transaction when a payment button is clicked
-        createOrder: function(data, actions) {
-          if(document.getElementById('amount1').checked){
-            amount=document.getElementById('amount1').value
-          }
-          else if(document.getElementById('amount2').checked){
-            amount=document.getElementById('amount2').value
-          }
-          else if(document.getElementById('amount3').checked){
-            amount=document.getElementById('amount3').value
-          }
-          return actions.order.create({
-            purchase_units: [{
-              amount: {
-                value: amount
-
-              }
-              
-            }]
-          });
-        },
-
-        // Finalize the transaction after payer approval
-        onApprove: function(data, actions) {
-
-          if(document.getElementById('amount1').checked){
-            amount=document.getElementById('amount1').value
-          }
-          else if(document.getElementById('amount2').checked){
-            amount=document.getElementById('amount2').value
-          }
-          else if(document.getElementById('amount3').checked){
-            amount=document.getElementById('amount3').value
-          }
-          return actions.order.capture().then(function(orderData) {
-            return fetch('', {
-              method: 'post',
-              headers: {
-                'X-CSRFToken': "{{ csrf_token }}"
-            },
-              body: JSON.stringify({
-                amount: amount,
-              })
-            });
-            window.location.href='http://127.0.0.1:8000/donate_success/';
+                }
                 
+              }]
+            });
+          },
 
-          });
-        }
-      }).render('#paypal-button-container');
+          // Finalize the transaction after payer approval
+          onApprove: function(data, actions) {
 
-    </script>
-  </body>
+            if(document.getElementById('amount1').checked){
+              amount=document.getElementById('amount1').value
+            }
+            else if(document.getElementById('amount2').checked){
+              amount=document.getElementById('amount2').value
+            }
+            else if(document.getElementById('amount3').checked){
+              amount=document.getElementById('amount3').value
+            }
+            image_name = document.getElementById('id_fave_image').innerHTML
+            return actions.order.capture().then(function(orderData) {
+              window.location.href='http://127.0.0.1:8000/donate_success/';
+              return fetch('', {
+                method: 'post',
+                headers: {
+                  'X-CSRFToken': "{{ csrf_token }}"
+              },
+                body: JSON.stringify({
+                  amount: amount,
+                  fave_image: image_name,
+                })
+              });
+
+                  
+
+            });
+          }
+        }).render('#paypal-button-container');
+
+      </script>
+    </div>
+  </div>
+  <div class="column">
+    <div class="donate_div">
+      <h2 class="donate_title">Upload your favourite artwork</h2>
+      <form method="post" enctype="multipart/form-data" >
+          <div class="donate_image">
+            {% csrf_token %}
+              {{form.as_p}}
+          </div>
+          <button class="fave_image_button" name="image_donation" type="submit"> Submit </button>
+          <br />
+          <p class="fave_image">Your current uploaded image:</p>
+          <p class="fave_image" id="id_fave_image">{{fave_img}}</p>
+      </form>
+    </div>
+  </div>
+</div> 
+<p class="donate_text"> Please be aware. If you do not upload your favourite image, then your donation will not be displayed as part of Barber Tiles. <p>
+</body>
 </html>
-</div>
+
 
 {% endblock body %}
 

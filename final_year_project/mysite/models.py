@@ -38,6 +38,15 @@ class Event(models.Model):
     def __str__(self):
         return self.title
     
+       
+class Comment(models.Model):
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
+    comment = models.TextField()
+    published_on = models.DateTimeField(auto_now_add=True, null=True)
+
+    def __str__(self):
+        self.published_on=timezone.now()
+        return str(self.comment)   
     
 class Post(models.Model):
     artist = models.CharField(max_length=200, unique=True)
@@ -46,13 +55,15 @@ class Post(models.Model):
     published_on = models.DateTimeField(blank=True, null=True)
     like = models.ManyToManyField(User, related_name='post_like')
     tags = TaggableManager()
+    comments = models.ManyToManyField(Comment, related_name='comments')
+    
 
     def __str__(self):
         self.published_on=timezone.now()
         return self.artist
     
     def publish(self):
-        self.save()        
+        self.save()     
         
 class Donation(models.Model):
     amount = models.IntegerField()
@@ -67,12 +78,11 @@ class Donation(models.Model):
 class Image(models.Model):
     fave_img = models.ImageField(upload_to='images/tiles/')
     
-class Comment(models.Model):
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
-    post = models.ForeignKey(Post,on_delete=models.CASCADE,null=True )
-    comment = models.TextField()
-    published_on = models.DateTimeField(auto_now_add=True, null=True)
-
+class BarberTile(models.Model):
+    fave_image = models.TextField()
+    first_name = models.TextField()
+    last_name = models.TextField()
+    amount = models.IntegerField()
+    
     def __str__(self):
-        self.published_on=timezone.now()
-        return str(self.user_id)
+        return str(self.first_name)

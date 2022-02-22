@@ -5,6 +5,25 @@
 
 <h1 class="tiles_header"> Barber Tiles <h1>
 
+{% for tile in tiles%}
+<div style="width:calc(40px*{{tile.amount}});" class="flip-card">
+    <div class="flip-card-inner">
+        <div class="flip-card-front">
+            <img id="img"class="tile_image" style="width:calc(40px*{{tile.amount}})" src="/media/images/tiles/{{tile.fave_image}}"></img>
+        </div>
+        <div style="width:calc(40px*{{tile.amount}})" class="flip-card-back">
+            <h2 name="tile_name" class="tile_name">{{tile.first_name}} {{tile.last_name}}</h2>
+        </div>
+    </div>
+</div>
 
+<script>
+    $('.flip-card .flip-card-inner').click(function() {
+        $(this).toggleClass('flip');
+    });
+
+</script>
+{% endfor %}
 
 {% endblock body %}
+

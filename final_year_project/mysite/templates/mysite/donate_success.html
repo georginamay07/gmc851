@@ -13,9 +13,25 @@
     <body>
         <h1 class="mb-5">Thank you</h1>
         <p>Thank you for your donation. <p>
-        <button onclick="location.href='{% url "donate_tiles" %}'"class="barber_tiles_button">Barber Tiles</button>
+        <button class="tiles"onclick="location.href='{% url "donate_tiles" %}'"class="barber_tiles_button">Barber Tiles</button>
     </body>
 <style>
+    .tiles{
+        border-color: grey;
+        color: black;
+        padding: 8px 32px;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        border-radius:8px;
+    }
+    .tiles:hover{
+      background-color: #3786a6;
+      color:white;
+  }
     p {
         text-align: center;
         margin:20px;
