@@ -5,19 +5,33 @@
 {% for article in articles %}
     <div class="article">
     <article>
+        <form method="post">
+        {% csrf_token %}
+
+        <input type="hidden" value={{article.pk}} name="pk">
         <h2 class="article_title">{{ article.title }}</h2>
         <time class="article_time">published: {{ article.published_on }}</time>
         <br></br>
         <img class="article_image" src={{article.cover_image.url}} width=400></img>
         <p class="article_content">{{ article.content|linebreaksbr }}</p>
         <br></br>
-        <form  action="/html/tags/html_form_tag_action.cfm" method="post">
             <div>
-            <textarea class="article_comments" style="width:90%; float:left;" placeholder="Add a comment..." id="comments"></textarea>
+            <textarea class="article_comments" name="comment" style="width:90%; float:left;" placeholder="Add a comment..." id="comments"></textarea>
             </div>
-            <input class="comment_submit" type="submit" value="Submit">
-            </form>
-
+            <input class="comment_submit" name="comment_submit" type="submit" value="Submit">
+        </form>
+        <section id="comments">
+        <ul style="list-style-type:none;padding-left:0px;padding-top:50px;margin:0;">
+            {% for comment in article.comments.all %}
+            <li style="padding-top:20px;">
+                <a style="font-weight:bold;pointer-events: none;color:black;">{{comment.user_id}} </a>
+                <a style="pointer-events: none;color:black;">{{comment}}</a>
+                <button name="delete_comment" style="float:right;"class="delete_comment"><i class="fa fa-trash"></i></button>
+                <a style="pointer-events: none;color:black;float:right;">{{comment.published_on}}</a>
+            </li>
+            {% endfor %}
+        </ul>
+        </section>
     </article>
 </div>
 {% endfor %}

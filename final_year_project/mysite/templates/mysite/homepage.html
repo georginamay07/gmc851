@@ -11,24 +11,38 @@
         <img class="post_image" width=400 src={{post.cover_image.url}}></img>
         <h2 name="post_artist" class="post_artist">{{ post.artist }}</h2>
         <p class="post_content">{{ post.content|linebreaksbr }}</p>
-        <button type="button" class="like">Like</button>
+        {%if request.user in post.like.all%}
+            <p style="float:left;font-size:20pt;color:red;">&hearts; {{post.number_of_likes}}</p>
+            <button type="submit" name="unlike" class="unlike"><i class="fa fa-thumbs-down"></i> Unlike</button>
+        {%else%}
+            <p style="float:left;font-size:20pt;color:red;">&hearts; {{post.number_of_likes}}</p>
+            <button type="submit" name="like" class="like"><i class="fa fa-thumbs-up"></i> Like</button>
+
+        {%endif%}
         <button type="button" onclick="location.href='{% url "donate" %}'" class="donate">Donate</button>
         <br></br>
         <br></br>
             <div>
             <textarea class="article_comments" name="comment" placeholder="Add a comment..." id="comments"></textarea>
             </div>
-            <input class="comment_submit" type="submit" value="Submit">
-        </form>
+            <input class="comment_submit" name ="comment_submit" type="submit" value="Submit">
         <div>
         
         <section id="comments">
             <ul style="list-style-type:none;padding-left:0px;padding-top:50px;margin:0;">
-                {% for comments in post.commments.all %}
-                <li style="padding-top:20px;"><a style="font-weight:bold;pointer-events: none;color:black;">{{comments.user_id}}  </a><a style="pointer-events: none;color:black;">{{comments.comment}}</a><a style="pointer-events: none;color:black;float:right;">{{comments.published_on}}</a></li>
+                {% for comment in post.comments.all %}
+                <li style="padding-top:20px;">
+                    <a style="font-weight:bold;pointer-events: none;color:black;">{{comment.user_id}} </a>
+                    <a name="comment_instance" value="{{comment}}" style="pointer-events: none;color:black;">{{comment}}</a>
+                    {%if request.user == comment.user_id%}
+                    <button name="delete_comment" style="float:right;"class="delete_comment"><i class="fa fa-trash"></i></button>
+                    {%endif%}
+                    <a style="pointer-events: none;color:black;float:right;">{{comment.published_on}} </a>
+                </li>
                 {% endfor %}
             </ul>
         </section>
+    </form>
     </div>
 
     </article>

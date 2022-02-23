@@ -1,4 +1,5 @@
 from datetime import date
+from django.http import HttpResponse
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login, authenticate, logout
 import datetime
@@ -17,7 +18,6 @@ from django.template.loader import render_to_string
 from django.core.mail import send_mail, BadHeaderError
 from django.conf import settings
 from decimal import Decimal
-from paypal.standard.forms import PayPalPaymentsForm
 from django.http import HttpResponseRedirect
 
 
@@ -27,24 +27,72 @@ from .models import Post
 from .models import User
 from .models import Donation
 from .models import Comment
-from .models import Image
+from .models import LikedTag
 from django.utils import timezone
 from django.contrib import messages
 from django.urls import reverse
+from taggit.models import Tag
 
 @login_required(login_url='forbidden')
 def home(request):
     if request.method == 'POST':
-            post_id = request.POST.get('pk')
+        post_id = request.POST.get('pk')
+        if 'comment_submit' in request.POST:
             comment = request.POST['comment']
-            Comment.objects.create(user_id = request.user, comment= comment)    
-            #this_post = Post.objects.get(id=post_id)    
-            #this_post.add(Post.objects.get(id=post_id))    
+            comment_instance = Comment.objects.create(user_id = request.user, comment= comment)    
+            this_post = Post.objects.get(id=post_id)    
+            this_post.comments.add(Comment.objects.get(id=comment_instance.id))  
+        if 'delete_comment' in request.POST:
+            deleted_comment = request.POST.get('comment_instance')
+            print(deleted_comment)
+            this_post = Post.objects.get(id=post_id)    
+            delete_comment_instance = Comment.objects.get(user_id = request.user, comment= deleted_comment)    
+            this_post.comments.remove(delete_comment_instance)  
+        if 'like' in request.POST:
+            this_post = Post.objects.get(id=post_id)
+            this_post.number_of_likes += 1
+            this_post.save()
+            this_post.like.add(request.user)
+            post_tags = this_post.tags.all()
+            tag_list=[]
+            i = 0
+            liked_tags = ",".join(tag_list)
+            if(LikedTag.objects.filter(user_id =request.user).exists()):
+                liked_tags_instance = LikedTag.objects.get(user_id=request.user)
+                for item in post_tags:
+                    tag = str(post_tags[i])
+                    liked_tags_instance.tags.add(tag)
+                    i+=1
+            else:
+                liked_tags_instance = LikedTag.objects.create(user_id=request.user)
+                for item in post_tags:
+                    tag = str(post_tags[i])
+                    liked_tags_instance.tags.add(tag)
+                    i+=1
+        if 'unlike' in request.POST:
+            this_post = Post.objects.get(id=post_id)    
+            this_post.number_of_likes -= 1
+            this_post.save()
+            this_post.like.remove(request.user)  
+            post_tags = this_post.tags.all()
+            i = 0
+            liked_tags_instance = LikedTag.objects.get(user_id=request.user)
+            for item in post_tags:
+                tag = str(post_tags[i])
+                liked_tags_instance.tags.remove(tag)
+                i+=1
     posts = Post.objects.filter(published_on__lte=timezone.now()).order_by('published_on')
     return render(request, 'mysite/homepage.html', {'posts':posts})
 
 @login_required(login_url='forbidden')
 def news(request):
+    if request.method == 'POST':
+        if 'comment_submit' in request.POST:            
+            article_id = request.POST.get('pk')
+            comment = request.POST['comment']
+            comment_instance = Comment.objects.create(user_id = request.user, comment= comment)    
+            this_article= Article.objects.get(id=article_id)    
+            this_article.comments.add(Comment.objects.get(id=comment_instance.id))  
     articles = Article.objects.filter(published_on__lte=timezone.now()).order_by('published_on')
     return render(request, 'mysite/news.html', {'articles':articles})
 
@@ -69,15 +117,15 @@ def donate(request):
             if json_data['amount'] == '1':
                 Donation.objects.create(amount=1, user_id=request.user, first_name=request.user.first_name, last_name=request.user.last_name)
                 #add if statement here so barber tiles are not created if no image is supplied
-                if json_data['fave_image'] is not '':
+                if json_data['fave_image'] != '':
                     BarberTile.objects.create(fave_image=json_data['fave_image'],first_name=request.user.first_name, last_name=request.user.last_name, amount=1)
             if json_data['amount'] == '5':
                 Donation.objects.create(amount=5, user_id=request.user, first_name=request.user.first_name, last_name=request.user.last_name)
-                if json_data['fave_image'] is not '':
+                if json_data['fave_image'] != '':
                     BarberTile.objects.create(fave_image=json_data['fave_image'],first_name=request.user.first_name, last_name=request.user.last_name, amount=5)
             if json_data['amount'] == '10':
                 Donation.objects.create(amount=10, user_id=request.user, first_name=request.user.first_name, last_name=request.user.last_name) 
-                if json_data['fave_image'] is not '':
+                if json_data['fave_image'] != '':
                     BarberTile.objects.create(fave_image=json_data['fave_image'],first_name=request.user.first_name, last_name=request.user.last_name, amount=10)
     else:
         form = ImageForm()
@@ -99,10 +147,27 @@ def donate_history(request):
 
 @login_required(login_url='forbidden')
 def liked_posts(request):
+    if request.method == 'POST':
+        post_id = request.POST.get('pk')
+        if 'unlike' in request.POST:
+            this_post = Post.objects.get(id=post_id)    
+            this_post.like.remove(request.user) 
+            this_post.number_of_likes -= 1
+            this_post.save() 
+            post_tags = this_post.tags.all()
+            i = 0
+            liked_tags_instance = LikedTag.objects.get(user_id=request.user)
+            for item in post_tags:
+                tag = str(post_tags[i])
+                liked_tags_instance.tags.remove(tag)
+                i+=1
     posts = Post.objects.filter(published_on__lte=timezone.now()).order_by('published_on')
-    return render(request, 'mysite/liked_posts.html', {'posts':posts})
+    for i in posts:
+        liked_posts = Post.objects.filter(like = request.user)
+    return render(request, 'mysite/liked_posts.html', {'liked_posts':liked_posts})
 
 def my_login(request):
+    messages=""
     if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
@@ -113,11 +178,9 @@ def my_login(request):
                 login(request, user)
                 return redirect('home')
         else:                  
-            messages.error(request, "Invalid email or password")
-    else:
-        messages.error(request, "Invalid email or password")
+            messages = "Invalid email or password"
     form = AuthenticationForm()
-    return render(request=request, template_name='mysite/login.html', context={"login_form":form})
+    return render(request=request, template_name='mysite/login.html', context={"login_form":form, 'messages':messages})
 
 def my_logout(request):
     logout(request)
@@ -125,16 +188,16 @@ def my_logout(request):
     return redirect('login')
 
 def signup(request): 
+    messages=""
     if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "Registration Successful")
             return redirect('login')
-        messages.error(request, "Unsuccessful registration")
+        messages="Unsuccessful registration"
     else:
         form = SignUpForm()
-    return render(request=request, template_name='mysite/signup.html', context={"signup_form":form})
+    return render(request=request, template_name='mysite/signup.html', context={"signup_form":form,'messages':messages})
 
 def password_reset(request, *args, **kwargs):
     if request.method == "POST":

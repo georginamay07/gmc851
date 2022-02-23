@@ -21,12 +21,15 @@
                   <form method="POST">
 
                     <div style="color:black;"class="outer-box">
+                    <p style="color:red;">{{messages}}</p>
+
                                         
-                    {{message}}  
                     {% csrf_token %}
                     {{ signup_form|crispy}}
 
                   <button class="btn btn-primary btn-lg btn-block" type="submit">Sign Up</button>
+
+
 
                     </div>
                  

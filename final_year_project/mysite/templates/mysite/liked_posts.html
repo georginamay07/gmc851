@@ -1,20 +1,32 @@
 {% extends 'mysite/base.html' %}
-
+{% load thumbnail%}
 {% block body %}
 
-{% for post in posts %}
-    <div class="row">
-        <div class="column">
-        <div class="posts">
-        <article>
-            <img class="post_image" width=400 src={{post.cover_image.url}}></img>
-            <h2 class="post_artist">{{ post.artist }}</h2>
-            <button class="like">Like</button>
-            <br></br>
-        </article>
+{% for post in liked_posts %}
+
+<div class="grid-container">
+    <div class="grid-item">
+        <div class="liked_posts">
+            <form method="POST">
+            {% csrf_token %}
+            <article>
+                <input type="hidden" value={{post.pk}} name="pk">
+                {% thumbnail post.cover_image "150x150" crop="center" as im %}
+                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+                {% empty %}
+                    <img src="/media/images/default-image.jpg" width="150">
+                {% endthumbnail %}
+
+                
+                <h2 class="liked_post_artist">{{ post.artist }}</h2>
+                <button type="submit" name="unlike" class="unlike"><i class="fa fa-thumbs-down"></i>Unlike</button>
+            </article>
+            </form>
         </div>
     </div>
-    </div>
+</div>
+{% empty %}
+<p class="no_likes_text">You have not liked any posts yet.</p>
 {% endfor %}
 
 {% endblock body %}

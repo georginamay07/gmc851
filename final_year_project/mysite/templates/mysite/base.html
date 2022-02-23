@@ -200,6 +200,7 @@
     }
 
     .comment_submit{
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
         border-color: grey;
         color: black;
         padding: 8px 32px;
@@ -254,6 +255,7 @@
     }
 
     .donate{
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
         border-color: grey;
         color: black;
         padding: 8px 32px;
@@ -270,6 +272,7 @@
     }
 
     .like{
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
         border-color: grey;
         color: black;
         padding: 8px 32px;
@@ -283,18 +286,49 @@
         cursor: pointer;
         border-radius:8px;
     }
-
+    .unlike{
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        border-color: black;
+        background-color:red;
+        color: white;
+        padding: 8px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        float:right;
+        font-size: 16px;
+        margin: 4px 2px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        border-radius:8px;
+    }
+    .delete_comment {
+        border: none;
+        cursor: pointer;
+        border-radius:8px;
+    }
+    .delete_comment:hover{
+        background-color: red;
+        color:white;
+    }
     .donate:hover{
         background-color: #3786a6;
         color:white;
     }
 
     .like:hover{
-        background-color: #3786a6;
+        background-color: red;
         color:white;
     }
 
     .donate_text{
+        text-align: center;
+        margin:20px;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        font-size:15pt;
+
+    }
+    .no_likes_text{
         text-align: center;
         margin:20px;
         font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
@@ -323,6 +357,7 @@
     }
 
     .fave_image_button {
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
         border-color: grey;
         color: black;
         padding: 8px 32px;
@@ -369,6 +404,7 @@
     }
 
     .donate_button {
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
         border-color: grey;
         color: black;
         padding: 8px 32px;
@@ -463,4 +499,28 @@
         font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 
       }
+      .grid-container {
+        display:inline-grid;
+        grid-template-columns: auto auto auto;
+      }
+      .liked_posts{
+        padding:20px;
+        box-shadow: 5px 5px;
+        background-color:white;
+        margin:20px;
+        box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+        overflow:auto; 
+        width:250;
+        margin-left:35%;
+        text-align:center;
+    }
+    .liked_post_artist{
+        color: black;
+        margin-top :10px;;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        font-weight:bold;
+        padding-bottom:30px;
+        font-size:10pt;
+    }
+
 </style>

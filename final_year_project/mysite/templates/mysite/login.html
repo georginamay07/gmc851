@@ -10,7 +10,6 @@
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
         <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-        <meta name="google-signin-client_id" content="690223079482-m2l4j183j0u8bkmjn68ddgn76bgss975.apps.googleusercontent.com">
     </head>
     <body>
         <section class="vh-100">
@@ -24,16 +23,13 @@
                       <form method="POST">
                        
                     <div style="color:black;"class="outer-box">
-                      
-                      {{message}}
+                      <p style="color:red;">{{messages}}</p>
                       {% csrf_token %}
                       {{login_form|crispy}}
 
                       <button class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
-          
                       <hr class="my-4">
           
-                      <div style="padding-left:180px;"class="g-signin2" data-onsuccess="onSignIn"></div>  
                                         
                     <div>
                       <a style="float:left;" href="{% url 'signup' %}">Create an account</a></li>
@@ -48,15 +44,6 @@
           </section>
     </body>
 </html>
-<script>
-    function onSignIn(googleUser) {
-        var profile = googleUser.getBasicProfile();
-        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-        console.log('Name: ' + profile.getName());
-        console.log('Image URL: ' + profile.getImageUrl());
-        console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-      }
-    </script>
 <style>
     .vh-100 {
         position:absolute;

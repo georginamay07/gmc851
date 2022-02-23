@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
+from telnetlib import AUTHENTICATION
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,6 +26,7 @@ SECRET_KEY = 'django-insecure-xc-4_anf$8#t8=yo)20!(l%1d856xt3fird1p*wcw$+w2(@n-y
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+THUMBNAIL_DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -36,6 +38,7 @@ PAYPAL_RECEIVER_EMAIL = 'sb-43ae0b12114389@business.example.com'
 PAYPAL_TEST = True
 
 # Application definition
+MESSAGE_STORAGE = 'django.contrib.messages.storage.fallback.FallbackStorage'
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -46,9 +49,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mysite',
     'taggit',
-    'paypal.standard.ipn',
     'crispy_forms',
-    
+    'sorl.thumbnail',
 ]
 
 CRISPY_TEMPLATE_PACK =  'bootstrap4'
@@ -67,6 +69,8 @@ password: EMAIL_HOST_PASSWORD
 use_tls: EMAIL_USE_TLS
 use_ssl: EMAIL_USE_SSL
 
+SESSION_COOKIE_SECURE = True
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -75,6 +79,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+
 ]
 
 ROOT_URLCONF = 'final_year_project.urls'
