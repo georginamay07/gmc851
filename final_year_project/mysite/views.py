@@ -97,17 +97,20 @@ def home(request):
                 i+=1
     posts = Post.objects.filter(published_on__lte=timezone.now()).order_by('-published_on')
     if 'recommended' in request.POST:
-        user_tags = LikedTag.objects.get(user_id=request.user).tags.all()
-        tag_list=[]
-        i = 0
-        for item in user_tags:
-                tag = str(user_tags[i])
-                tag_list.append(tag)
-                i+=1
-        if not user_tags:
-            posts=None
+        if(LikedTag.objects.filter(user_id=request.user).exists()):
+            user_tags = LikedTag.objects.get(user_id=request.user).tags.all()
+            tag_list=[]
+            i = 0
+            for item in user_tags:
+                    tag = str(user_tags[i])
+                    tag_list.append(tag)
+                    i+=1
+            if not user_tags:
+                posts=None
+            else:
+                posts = Post.objects.filter(~Q(like=request.user)).annotate(similar_tags=Count('tags', filter=Q(tags__in=user_tags))).order_by('-similar_tags')
         else:
-            posts = Post.objects.filter(~Q(like=request.user)).annotate(similar_tags=Count('tags', filter=Q(tags__in=user_tags))).order_by('-similar_tags')
+            posts=None
     if 'like_count' in request.POST:
         posts = Post.objects.filter(published_on__lte=timezone.now()).order_by('-number_of_likes')
     if 'published' in request.POST:
