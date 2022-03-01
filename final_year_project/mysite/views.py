@@ -19,7 +19,7 @@ from django.core.mail import send_mail, BadHeaderError
 from django.conf import settings
 from decimal import Decimal
 from django.http import HttpResponseRedirect
-
+from django.db.models import Count
 
 from .models import Article, BarberTile
 from .models import Event
@@ -32,7 +32,21 @@ from django.utils import timezone
 from django.contrib import messages
 from django.urls import reverse
 from taggit.models import Tag
+from django.contrib.auth import get_user_model
+from django.core.mail import send_mail
 
+def monthly_email():
+    all_users = get_user_model().objects.all()
+    month_day = datetime.datetime.now().strftime ("%d")
+    print(month_day)
+    if(month_day == "01"):
+        for user in all_users:  
+            subject = "Monthly roundup from the Barber Institute!"
+            email_template_name = 'mysite/monthly_email_template.txt'
+            c = {"email": user.email, "site_name": 'The Barber Institute', "user":user,"firstname":user.first_name}
+            email = render_to_string(email_template_name, c)
+            send_mail(subject, email, 'barberinstiutetest@gmail.com', [user.email],fail_silently=False)
+        
 @login_required(login_url='forbidden')
 def home(request):
     if request.method == 'POST':
@@ -43,11 +57,12 @@ def home(request):
             this_post = Post.objects.get(id=post_id)    
             this_post.comments.add(Comment.objects.get(id=comment_instance.id))  
         if 'delete_comment' in request.POST:
-            deleted_comment = request.POST.get('comment_instance')
-            print(deleted_comment)
             this_post = Post.objects.get(id=post_id)    
-            delete_comment_instance = Comment.objects.get(user_id = request.user, comment= deleted_comment)    
-            this_post.comments.remove(delete_comment_instance)  
+            deleted_comment = request.POST.get('comment_pk')
+            print(deleted_comment)
+            #delete_comment_instance = Comment.objects.get(user_id = request.user, id = deleted_comment)    
+            #this_post.comments.remove(delete_comment_instance)  
+            #delete_comment_instance.delete()
         if 'like' in request.POST:
             this_post = Post.objects.get(id=post_id)
             this_post.number_of_likes += 1
@@ -56,7 +71,6 @@ def home(request):
             post_tags = this_post.tags.all()
             tag_list=[]
             i = 0
-            liked_tags = ",".join(tag_list)
             if(LikedTag.objects.filter(user_id =request.user).exists()):
                 liked_tags_instance = LikedTag.objects.get(user_id=request.user)
                 for item in post_tags:
@@ -81,18 +95,40 @@ def home(request):
                 tag = str(post_tags[i])
                 liked_tags_instance.tags.remove(tag)
                 i+=1
-    posts = Post.objects.filter(published_on__lte=timezone.now()).order_by('published_on')
+    posts = Post.objects.filter(published_on__lte=timezone.now()).order_by('-published_on')
+    if 'recommended' in request.POST:
+        user_tags = LikedTag.objects.get(user_id=request.user).tags.all()
+        tag_list=[]
+        i = 0
+        for item in user_tags:
+                tag = str(user_tags[i])
+                tag_list.append(tag)
+                i+=1
+        if not user_tags:
+            posts=None
+        else:
+            posts = Post.objects.filter(~Q(like=request.user)).annotate(similar_tags=Count('tags', filter=Q(tags__in=user_tags))).order_by('-similar_tags')
+    if 'like_count' in request.POST:
+        posts = Post.objects.filter(published_on__lte=timezone.now()).order_by('-number_of_likes')
+    if 'published' in request.POST:
+        posts = Post.objects.filter(published_on__lte=timezone.now()).order_by('-published_on')
     return render(request, 'mysite/homepage.html', {'posts':posts})
 
 @login_required(login_url='forbidden')
 def news(request):
     if request.method == 'POST':
+        article_id = request.POST.get('pk')
         if 'comment_submit' in request.POST:            
-            article_id = request.POST.get('pk')
             comment = request.POST['comment']
             comment_instance = Comment.objects.create(user_id = request.user, comment= comment)    
             this_article= Article.objects.get(id=article_id)    
             this_article.comments.add(Comment.objects.get(id=comment_instance.id))  
+        if 'delete_comment' in request.POST:
+            this_post = Post.objects.get(id=article_id)    
+            deleted_comment = request.POST.get('comment_pk')
+            delete_comment_instance = Comment.objects.get(user_id = request.user, id = deleted_comment)    
+            this_post.comments.remove(delete_comment_instance)  
+            delete_comment_instance.delete()
     articles = Article.objects.filter(published_on__lte=timezone.now()).order_by('published_on')
     return render(request, 'mysite/news.html', {'articles':articles})
 
@@ -118,15 +154,18 @@ def donate(request):
                 Donation.objects.create(amount=1, user_id=request.user, first_name=request.user.first_name, last_name=request.user.last_name)
                 #add if statement here so barber tiles are not created if no image is supplied
                 if json_data['fave_image'] != '':
-                    BarberTile.objects.create(fave_image=json_data['fave_image'],first_name=request.user.first_name, last_name=request.user.last_name, amount=1)
+                    url = "images/tiles/" + json_data['fave_image']
+                    BarberTile.objects.create(fave_image=url,first_name=request.user.first_name, last_name=request.user.last_name, amount=1)
             if json_data['amount'] == '5':
                 Donation.objects.create(amount=5, user_id=request.user, first_name=request.user.first_name, last_name=request.user.last_name)
                 if json_data['fave_image'] != '':
-                    BarberTile.objects.create(fave_image=json_data['fave_image'],first_name=request.user.first_name, last_name=request.user.last_name, amount=5)
+                    url = "images/tiles/" + json_data['fave_image']
+                    BarberTile.objects.create(fave_image=url,first_name=request.user.first_name, last_name=request.user.last_name, amount=5)
             if json_data['amount'] == '10':
                 Donation.objects.create(amount=10, user_id=request.user, first_name=request.user.first_name, last_name=request.user.last_name) 
                 if json_data['fave_image'] != '':
-                    BarberTile.objects.create(fave_image=json_data['fave_image'],first_name=request.user.first_name, last_name=request.user.last_name, amount=10)
+                    url = "images/tiles/" + json_data['fave_image']
+                    BarberTile.objects.create(fave_image=url,first_name=request.user.first_name, last_name=request.user.last_name, amount=10)
     else:
         form = ImageForm()
     return render(request, 'mysite/donate.html', {'form':form})
@@ -184,7 +223,6 @@ def my_login(request):
 
 def my_logout(request):
     logout(request)
-    messages.info(request, "You have successfully logged out.") 
     return redirect('login')
 
 def signup(request): 

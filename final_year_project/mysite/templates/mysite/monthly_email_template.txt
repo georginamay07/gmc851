@@ -1,0 +1,6 @@
+Hello {{firstname}}!
+
+Here is your monthly roundup!
+
+Thanks,
+The Barber Institute

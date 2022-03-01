@@ -1,12 +1,24 @@
 {% extends 'mysite/base.html' %}
 
 {% block body %}
+<form method="POST">
+    {% csrf_token %}
 
+<div class="filters">
+    <h2 class="filter">Filter By:</h2>
+    <div id="btn-group" class="btn-group">
+        <button class="filter_button" id="filter_button1" type="submit" name="recommended">Recommended</button>
+        <button class="filter_button" id="filter_button2" type="submit" name="like_count">Like Count</button>
+        <button class="filter_button active" id="filter_button3" type="submit" name="published">Newist</button>
+    </div>  
+</div>
+</form>
 {% for post in posts %}
+
     <div class="posts">
     <article>
         <form method="post">
-        {% csrf_token %}
+            {% csrf_token %}
         <input type="hidden" value={{post.pk}} name="pk">
         <img class="post_image" width=400 src={{post.cover_image.url}}></img>
         <h2 name="post_artist" class="post_artist">{{ post.artist }}</h2>
@@ -31,14 +43,17 @@
         <section id="comments">
             <ul style="list-style-type:none;padding-left:0px;padding-top:50px;margin:0;">
                 {% for comment in post.comments.all %}
-                <li style="padding-top:20px;">
-                    <a style="font-weight:bold;pointer-events: none;color:black;">{{comment.user_id}} </a>
-                    <a name="comment_instance" value="{{comment}}" style="pointer-events: none;color:black;">{{comment}}</a>
-                    {%if request.user == comment.user_id%}
-                    <button name="delete_comment" style="float:right;"class="delete_comment"><i class="fa fa-trash"></i></button>
-                    {%endif%}
-                    <a style="pointer-events: none;color:black;float:right;">{{comment.published_on}} </a>
-                </li>
+                    <li style="padding-top:20px;">
+                        <a style="font-weight:bold;pointer-events: none;color:black;">{{comment.user_id}} </a>
+                        <a name="comment_instance" style="pointer-events: none;color:black;">{{comment}}</a>
+                        {%if request.user == comment.user_id%}
+                            <input type="hidden" value={{comment.pk}} name="comment_pk">
+                            <button type="submit" name="delete_comment" style="float:right;"class="delete_comment"><i class="fa fa-trash"></i></button>
+                        {%endif%}
+                        <a style="pointer-events: none;color:black;float:right;">{{comment.published_on}} </a>
+                    </li>
+                {% empty %}
+                    <p class="no_comments_text">There are currently no comments.</p>
                 {% endfor %}
             </ul>
         </section>
@@ -47,6 +62,8 @@
 
     </article>
 </div>
+{% empty %}
+<p class="no_likes_text">You have not liked any posts yet. Please like posts in order to view recommended posts.</p>
 {% endfor %}
 
 {% endblock body %}

@@ -80,7 +80,7 @@ class Image(models.Model):
     fave_img = models.ImageField(upload_to='images/tiles/')
     
 class BarberTile(models.Model):
-    fave_image = models.TextField()
+    fave_image = models.ImageField()
     first_name = models.TextField()
     last_name = models.TextField()
     amount = models.IntegerField()
