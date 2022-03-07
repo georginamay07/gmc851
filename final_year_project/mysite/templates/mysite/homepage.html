@@ -1,23 +1,34 @@
 {% extends 'mysite/base.html' %}
 
 {% block body %}
-<form method="POST">
-    {% csrf_token %}
 
 <div class="filters">
     <h2 class="filter">Filter By:</h2>
     <div id="btn-group" class="btn-group">
-        <button class="filter_button" id="filter_button1" type="submit" name="recommended">Recommended</button>
-        <button class="filter_button" id="filter_button2" type="submit" name="like_count">Like Count</button>
-        <button class="filter_button active" id="filter_button3" type="submit" name="published">Newist</button>
+        {% if url == "recommended" %}
+        <button class="filter_button active" id="filter_button1" onclick="location.href='{% url "home_recommended" %}'" name="recommended">Recommended</button>
+        {% else %}
+        <button class="filter_button" id="filter_button1" onclick="location.href='{% url "home_recommended" %}'"  name="recommended">Recommended</button>
+        {% endif %}
+        {% if url == "like" %}
+            <button class="filter_button active" id="filter_button2" onclick="location.href='{% url "home_like" %}'" name="like_count">Like Count</button>
+        {% else %}
+            <button class="filter_button" id="filter_button2" onclick="location.href='{% url "home_like" %}'" name="like_count">Like Count</button>
+        {% endif %}
+        {% if url == "newist" %}
+            <button class="filter_button active" id="filter_button3" onclick="location.href='{% url "home" %}'" name="published">Newist</button>
+        {% else %}
+            <button class="filter_button" id="filter_button3" onclick="location.href='{% url "home" %}'" name="published">Newist</button>
+        {% endif %}
+
     </div>  
 </div>
-</form>
+
 {% for post in posts %}
 
     <div class="posts">
     <article>
-        <form method="post">
+        <form class="form" method="post">
             {% csrf_token %}
         <input type="hidden" value={{post.pk}} name="pk">
         <img class="post_image" width=400 src={{post.cover_image.url}}></img>
@@ -34,30 +45,38 @@
         <button type="button" onclick="location.href='{% url "donate" %}'" class="donate">Donate</button>
         <br></br>
         <br></br>
+
             <div>
             <textarea class="article_comments" name="comment" placeholder="Add a comment..." id="comments"></textarea>
             </div>
             <input class="comment_submit" name ="comment_submit" type="submit" value="Submit">
         <div>
-        
+        </form>
+
         <section id="comments">
             <ul style="list-style-type:none;padding-left:0px;padding-top:50px;margin:0;">
                 {% for comment in post.comments.all %}
                     <li style="padding-top:20px;">
                         <a style="font-weight:bold;pointer-events: none;color:black;">{{comment.user_id}} </a>
                         <a name="comment_instance" style="pointer-events: none;color:black;">{{comment}}</a>
+                        <a style="pointer-events: none;color:black;float:right;">{{comment.published_on}} </a>
                         {%if request.user == comment.user_id%}
+                        <form method="POST">
+                            {% csrf_token %}
                             <input type="hidden" value={{comment.pk}} name="comment_pk">
                             <button type="submit" name="delete_comment" style="float:right;"class="delete_comment"><i class="fa fa-trash"></i></button>
+                        </form> 
                         {%endif%}
-                        <a style="pointer-events: none;color:black;float:right;">{{comment.published_on}} </a>
+                        
                     </li>
                 {% empty %}
                     <p class="no_comments_text">There are currently no comments.</p>
+
                 {% endfor %}
             </ul>
         </section>
-    </form>
+
+
     </div>
 
     </article>
@@ -65,5 +84,6 @@
 {% empty %}
 <p style="padding-top:200px;"class="no_likes_text">You have not liked any posts yet. Please like posts in order to view recommended posts.</p>
 {% endfor %}
+
 
 {% endblock body %}

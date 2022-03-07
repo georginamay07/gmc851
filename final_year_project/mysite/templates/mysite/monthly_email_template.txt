@@ -2,5 +2,12 @@ Hello {{firstname}}!
 
 Here is your monthly roundup!
 
+Your donations this month:
+
+{{donations}}
+
+We appreciate every donation so thank you!
+
+
 Thanks,
 The Barber Institute

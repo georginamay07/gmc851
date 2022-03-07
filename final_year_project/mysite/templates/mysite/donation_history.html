@@ -1,12 +1,12 @@
 {% extends 'mysite/base.html' %}
 
 {% block body %}
+<table id="donations">
+    <tr>
+        <th>Donation Amount</th>
+        <th>Date of Donation</th> 
+    </tr> 
     {%for user_donation in user_donations%}
-    <table id="donations">
-        <tr>
-            <th>Donation Amount</th>
-            <th>Date of Donation</th> 
-        </tr> 
     <tr> 
         <td>£{{user_donation.amount}}.00</td>
         <td>{{user_donation.date}}</td>

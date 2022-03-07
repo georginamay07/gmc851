@@ -19,6 +19,7 @@
         <div class="container-fluid">
             
             <ul class="nav navbar-nav navbar-left">
+                
                 <li><img style="height:45;"src="https://barber.org.uk/wp-content/uploads/2018/10/cropped-gold-logo-1.jpeg"></li>
                 <li><a style="font-weight:bold;" href="{% url 'home' %}">Barber Institute</a></li>
                 <li><a style="font-size:10pt; padding-left:0;color:#4A90AB;"class="username"> Welcome, {{user.first_name}}</a>
@@ -103,11 +104,9 @@
     .nav.navbar-nav.navbar-left.footer_link li a:hover{
         background-color:#4A90AB;
         color:white;
-    }  
+    } 
     .navbar-custom {
         background-color: #ffffff;
-        height: 50px;
-        margin-bottom: 0px !important;
         font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
         box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
 
@@ -358,7 +357,6 @@
         margin-left:50;
         margin-bottom:30;
         height:400;
-        width:600;
         box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
         overflow:auto;
     }
@@ -508,27 +506,23 @@
 
 
       }
-      .row:after {
-        content: "";
-        display: table;
-        clear: both;
-      }
+      
       .tile-column{
         display: inline-flex;
-        width:27%;
+        width:23%;
         flex-wrap: wrap;
         vertical-align: top;
       }
       .tile-column2{
         display: inline-flex;
-        width:27%;
+        width:30%;
         flex-wrap: wrap;
         vertical-align: top;
 
       }
       .tile-column3{
         display: inline-flex;
-        width:41%;
+        width:45%;
         flex-wrap: wrap;
         vertical-align: top;
 

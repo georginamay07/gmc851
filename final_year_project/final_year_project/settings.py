@@ -29,10 +29,12 @@ DEBUG = True
 THUMBNAIL_DEBUG = True
 
 ALLOWED_HOSTS = []
+#media url in order to save images etc.
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+#where to send the money to (the reciever account)
 PAYPAL_RECEIVER_EMAIL = 'sb-43ae0b12114389@business.example.com'
 
 PAYPAL_TEST = True
@@ -40,6 +42,11 @@ PAYPAL_TEST = True
 # Application definition
 MESSAGE_STORAGE = 'django.contrib.messages.storage.fallback.FallbackStorage'
 
+#installed apps and libraries
+#mysite is my app
+#taggit is the taggit library in order for me to tag posts
+#crispy forms allows me to create forms
+#sorl thumbnail allows me to crop images to squares 
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -53,8 +60,10 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
 ]
 
+
 CRISPY_TEMPLATE_PACK =  'bootstrap4'
 
+#settings for sending emails
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = '587'
@@ -117,17 +126,6 @@ DATABASES = {
     
 
 }
-
-#    'users': {
-#        "ENGINE": "mssql",
-#        "NAME": "georginadb",
-#        "USER": "MyLogin",
-#        "PASSWORD": "DanielCraig007",
-#        "HOST": "localhost",
-#        "PORT": "1433",
-#        "OPTIONS": {"driver": "ODBC Driver 17 for SQL Server", 
-#        },
-#    },
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 

@@ -19,6 +19,8 @@
             <textarea class="article_comments" name="comment" style="width:90%; float:left;" placeholder="Add a comment..." id="comments"></textarea>
             </div>
             <input class="comment_submit" name="comment_submit" type="submit" value="Submit">
+        </form>
+
         <section id="comments">
         <ul style="list-style-type:none;padding-left:0px;padding-top:50px;margin:0;">
             {% for comment in article.comments.all %}
@@ -26,11 +28,16 @@
                 <a style="font-weight:bold;pointer-events: none;color:black;">{{comment.user_id}} </a>
                 <a style="pointer-events: none;color:black;">{{comment}}</a>
                 {%if request.user == comment.user_id%}
-                <input type="hidden" value={{comment.pk}} name="comment_pk">
-                <button type="submit" name="delete_comment" style="float:right;"class="delete_comment"><i class="fa fa-trash"></i></button>
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" value={{comment.pk}} name="comment_pk">
+                    <button type="submit" name="delete_comment" style="float:right;"class="delete_comment"><i class="fa fa-trash"></i></button>
+                </form>
                 {%endif%}
                 <a style="pointer-events: none;color:black;float:right;">{{comment.published_on}}</a>
             </li>
+            {% empty %}
+                <p class="no_comments_text">There are currently no comments.</p>
             {% endfor %}
         </ul>
         </section>
