@@ -1,6 +1,10 @@
+
+<!--Account created page-->
 <html lang="en">
+
+
     <head>
-        <title>The Barber Institute</title>
+        <title>Account Created</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>        
         <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
@@ -15,11 +19,12 @@
             <div class="col-12 col-md-8 col-lg-6 col-xl-5">
               <div class="card shadow-2-strong" style="border-radius: 1rem;">
                 <div class="card-body p-5 text-center">
-      
+                  <!--User has successfully created an account-->
                   <h3 class="mb-5">You have successfully created an account!</h3>
                   <div style="color:black;"class="outer-box">
                                         
                     <p>You can now login!</p>
+                    <!--Prompts user to login-->
                     <button class="login_button" class="btn btn-primary btn-lg btn-block" onclick="location.href='{% url "login" %}'">Login</button>
 
                     </div>
@@ -33,6 +38,8 @@
       </section>
     </body>
     </html>
+
+    <!--CSS FOR ACCOUNT CREATED-->
     <style>
         .vh-100 {
             position:absolute;

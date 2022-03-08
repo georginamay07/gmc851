@@ -1,7 +1,9 @@
 {% extends 'mysite/base.html' %}
 
+<!--Donate Page which extends Base-->
 {% block body %}
 
+<!--Carousel of images for display purposes-->
 <div id="myCarousel" class="carousel slide" data-ride="carousel">
 
     <!-- Wrapper for slides -->
@@ -30,6 +32,7 @@
           <p>If you wish to make a substantial donation, please contact the Barber’s Communications and Marketing Manager, Andrew Davies.</p>
         </div>
       </div>
+      <!--Left and right arrows to allow users to skip through carousel manually-->
       <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
         <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
         <span class="sr-only">Previous</span>
@@ -45,39 +48,45 @@
 </div>
 <div class="row">
   <div class="column">
+    <!--Donation Box -->
     <div class="donate_div">
      <h2 class="donate_title">Make a donation</h2>
-     <form id="donate-form" method="POST">
-      
+      <!--Donation options which user selects through radio buttons-->
         <div class="donate_options" style="margin-left:60px;">
             <input id="amount1" type="radio" value="1" name="amount" class="money_button"> £1.00</input><br>
             <input id="amount2" type="radio" value="5" name="amount" class="money_button"> £5.00</input><br>
             <input id="amount3" type="radio" value="10" name="amount" class="money_button"> £10.00</input><br>
         </div>
         
-
+        <!--Paypal API buttons from paypal developer site-->
         <script src="https://www.paypal.com/sdk/js?client-id=AYdRfbvZj6Qunsj9uWNirrIeqRuGvxxa3x0DS1HmhD0xTFpXnhckGRqZ-vqJDEc4sD_6HYmCYSYv38Av&currency=GBP&disable-funding=credit,card"></script>
-          <!-- Set up a container element for the button -->
           <div type="submit" id="paypal-button-container">
           </div>
           <img style="margin-left:35%;"src="https://www.ernestwindows.com/index_files/images/PoweredByPaypal.png" width=150/>
           
-      
-      </form> 
+      <!--Javscript which deals with Paypal Transaction-->
       <script>
         paypal.Buttons({
 
           // Sets up the transaction when a payment button is clicked
           createOrder: function(data, actions) {
+            // If user selects £1 radio button
             if(document.getElementById('amount1').checked){
+              //Sets amount to 1
               amount=document.getElementById('amount1').value
             }
+            // If user selects £5 radio button
             else if(document.getElementById('amount2').checked){
+              //Sets amount to 5
               amount=document.getElementById('amount2').value
             }
+            // If user selects £10 radio button
             else if(document.getElementById('amount3').checked){
+              // Sets amount to 10
               amount=document.getElementById('amount3').value
             }
+            //If no donation amount is selected then no paypal window will open
+            //When paypal window opens this displays the amount the user is donating
             return actions.order.create({
               purchase_units: [{
                 amount: {
@@ -101,9 +110,14 @@
             else if(document.getElementById('amount3').checked){
               amount=document.getElementById('amount3').value
             }
+            //Gets the name of the image from the form that was submitted
             image_name = document.getElementById('id_fave_image').innerHTML
+            //Once approved 
             return actions.order.capture().then(function(orderData) {
+              //Redirect user to donation success page
               window.location.href='http://127.0.0.1:8000/donate_success/';
+              //JSON Post request which sends the donation amount and 
+              //fave image name in order to create a donation and barber tile object
               return fetch('', {
                 method: 'post',
                 headers: {
@@ -125,6 +139,7 @@
     </div>
   </div>
   <div class="column">
+    <!--Form that allows users to upload a chosen image-->
     <div class="donate_div">
       <h2 class="donate_title">Upload your favourite artwork</h2>
       <form method="post" enctype="multipart/form-data" >
@@ -134,6 +149,7 @@
           </div>
           <button class="fave_image_button" name="image_donation" type="submit"> Submit </button>
           <br />
+          <!--Once a user has uploaded this displays the name of the image-->
           <p class="fave_image">Your current uploaded image:</p>
           <p class="fave_image" id="id_fave_image">{{fave_img}}</p>
       </form>

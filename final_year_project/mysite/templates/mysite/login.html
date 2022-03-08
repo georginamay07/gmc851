@@ -1,8 +1,10 @@
 {% load crispy_forms_tags %}
 
+<!--Login Page-->
+
 <html lang="en">
     <head>
-        <title>The Barber Institute</title>
+        <title>Login to the Barber Institute</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>    
         <script src="https://apis.google.com/js/platform.js" async defer></script>     
@@ -18,21 +20,23 @@
                 <div class="col-12 col-md-8 col-lg-6 col-xl-5">
                   <div class="card shadow-2-strong" style="border-radius: 1rem;">
                     <div class="card-body p-5 text-center">
-          
+                      <!--Displays Login Form-->
                       <h3 class="mb-5">Login</h3>
                       <form method="POST">
                        
                     <div style="color:black;"class="outer-box">
+                      <!--Displays errors if form is invalid-->
                       <p style="color:red;">{{messages}}</p>
                       {% csrf_token %}
                       {{login_form|crispy}}
-
+                      <!--Submits form-->
                       <button class="btn btn-primary btn-lg btn-block" type="submit">Login</button>
                       <hr class="my-4">
           
                                         
                     <div>
-                      <a style="float:left;" href="{% url 'signup' %}">Create an account</a></li>
+                      <!--Links to sign up and forgotten password-->
+                      <a style="float:left;padding-right:20px;" href="{% url 'signup' %}">Create an account</a></li>
                       <a style="float:right;" href="{% url 'forgotten_password' %}">Forgotten Password?</a>
                     </div>
                     </div>
@@ -44,6 +48,9 @@
           </section>
     </body>
 </html>
+
+<!--CSS FOR LOGIN PAGE-->
+
 <style>
     .vh-100 {
         position:absolute;
@@ -62,7 +69,7 @@
         font-weight: 300;
         color:white;
         background-image: url('https://www.codart.nl/wp-content/uploads/2020/09/BIFA-17th-century-Gallery-scaled.jpg');
-        background-repeat:no-repeat;
+        background-repeat:repeat-x;
         background-size:cover;
     }
 

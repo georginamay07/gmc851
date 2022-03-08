@@ -1,19 +1,22 @@
 {% extends 'mysite/base.html' %}
 
+<!--Hompeage which extends Base-->
 {% block body %}
 
+<!--Filters that display posts by recommended, like count or published date-->
 <div class="filters">
     <h2 class="filter">Filter By:</h2>
     <div id="btn-group" class="btn-group">
+        <!--Checks url and sets button to active if it is the current url -->
         {% if url == "recommended" %}
         <button class="filter_button active" id="filter_button1" onclick="location.href='{% url "home_recommended" %}'" name="recommended">Recommended</button>
         {% else %}
         <button class="filter_button" id="filter_button1" onclick="location.href='{% url "home_recommended" %}'"  name="recommended">Recommended</button>
         {% endif %}
         {% if url == "like" %}
-            <button class="filter_button active" id="filter_button2" onclick="location.href='{% url "home_like" %}'" name="like_count">Like Count</button>
+            <button class="filter_button active" id="filter_button2" onclick="location.href='{% url "home_like" %}'" name="like_count">Most Popular</button>
         {% else %}
-            <button class="filter_button" id="filter_button2" onclick="location.href='{% url "home_like" %}'" name="like_count">Like Count</button>
+            <button class="filter_button" id="filter_button2" onclick="location.href='{% url "home_like" %}'" name="like_count">Most Popular</button>
         {% endif %}
         {% if url == "newist" %}
             <button class="filter_button active" id="filter_button3" onclick="location.href='{% url "home" %}'" name="published">Newist</button>
@@ -24,52 +27,71 @@
     </div>  
 </div>
 
+<!--Loops through each post-->
 {% for post in posts %}
 
     <div class="posts">
     <article>
+        <!--Form which submits like/unlike and comments-->
         <form class="form" method="post">
             {% csrf_token %}
+        <!--Hidden post ID-->
         <input type="hidden" value={{post.pk}} name="pk">
+        <!--Displays post details-->
         <img class="post_image" width=400 src={{post.cover_image.url}}></img>
         <h2 name="post_artist" class="post_artist">{{ post.artist }}</h2>
         <p class="post_content">{{ post.content|linebreaksbr }}</p>
+        <!--If the user has liked the post then it displays the Unlike button-->
+        <!--If user clicks Unlike, then the form is submitted-->
         {%if request.user in post.like.all%}
+            <!--Like Count-->
             <p style="float:left;font-size:20pt;color:red;">&hearts; {{post.number_of_likes}}</p>
             <button type="submit" name="unlike" class="unlike"><i class="fa fa-thumbs-down"></i> Unlike</button>
+        <!--If the user has not liked the post, then it displays the like button-->
+        <!--If the user clicks Like then the form is submitted-->
         {%else%}
             <p style="float:left;font-size:20pt;color:red;">&hearts; {{post.number_of_likes}}</p>
             <button type="submit" name="like" class="like"><i class="fa fa-thumbs-up"></i> Like</button>
 
         {%endif%}
+        <!--Donate button redirects user to donate page-->
         <button type="button" onclick="location.href='{% url "donate" %}'" class="donate">Donate</button>
         <br></br>
         <br></br>
-
+            <!--User submits there comments here-->
             <div>
             <textarea class="article_comments" name="comment" placeholder="Add a comment..." id="comments"></textarea>
             </div>
+            <!--Submits the form-->
             <input class="comment_submit" name ="comment_submit" type="submit" value="Submit">
         <div>
         </form>
-
+        <!--Displays all of the posts comments by published date-->
         <section id="comments">
             <ul style="list-style-type:none;padding-left:0px;padding-top:50px;margin:0;">
+                <!--Loops through each comment in the list of post comments-->
                 {% for comment in post.comments.all %}
                     <li style="padding-top:20px;">
+                        <!--Displays comment details-->
                         <a style="font-weight:bold;pointer-events: none;color:black;">{{comment.user_id}} </a>
                         <a name="comment_instance" style="pointer-events: none;color:black;">{{comment}}</a>
                         <a style="pointer-events: none;color:black;float:right;">{{comment.published_on}} </a>
+                        <!--For each comment, if the comment has been posted by the current user then display a delete button-->
+                        <!--Ensures users can only delete their own comments, not others-->
                         {%if request.user == comment.user_id%}
+                        <!--Form which deletes comments-->
                         <form method="POST">
                             {% csrf_token %}
+                            <!--Hidden comment ID-->
                             <input type="hidden" value={{comment.pk}} name="comment_pk">
+                            <!--Submits form-->
                             <button type="submit" name="delete_comment" style="float:right;"class="delete_comment"><i class="fa fa-trash"></i></button>
                         </form> 
                         {%endif%}
                         
                     </li>
                 {% empty %}
+                <!--If there are no comments for this post-->
                     <p class="no_comments_text">There are currently no comments.</p>
 
                 {% endfor %}
@@ -82,6 +104,7 @@
     </article>
 </div>
 {% empty %}
+<!--If there are no liked posts by the user-->
 <p style="padding-top:200px;"class="no_likes_text">You have not liked any posts yet. Please like posts in order to view recommended posts.</p>
 {% endfor %}
 

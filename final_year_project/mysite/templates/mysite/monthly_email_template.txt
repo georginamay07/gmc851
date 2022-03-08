@@ -1,3 +1,4 @@
+{% comment %} Generates users first name and donations {% endcomment %}
 Hello {{firstname}}!
 
 Here is your monthly roundup!

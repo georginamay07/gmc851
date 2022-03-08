@@ -1,10 +1,12 @@
 {% extends 'mysite/base.html' %}
-
+<!--Events page which extends Base-->
 {% block body %}
 
+<!--Loop through each event post-->
 {% for event in events %}
     <div class="article">
     <article>
+        <!--Display event details-->
         <h2 class="article_title">{{ event.title }}</h2>
         <time class="article_time">Event Date: {{ event.date}}</time>
         <br></br>

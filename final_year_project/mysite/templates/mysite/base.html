@@ -1,4 +1,6 @@
 {% load static %}
+
+<!--Base html page-->
 <html lang="en">
     <head>
         <title>The Barber Institute</title>
@@ -15,11 +17,12 @@
 
     </head>
     <body>
+        <!--Bootstrap navigation bar-->
     <nav class="navbar navbar-custom navbar-fixed-top">
         <div class="container-fluid">
             
             <ul class="nav navbar-nav navbar-left">
-                
+                <!--Logo and Title of website as well as the users login name-->
                 <li><img style="height:45;"src="https://barber.org.uk/wp-content/uploads/2018/10/cropped-gold-logo-1.jpeg"></li>
                 <li><a style="font-weight:bold;" href="{% url 'home' %}">Barber Institute</a></li>
                 <li><a style="font-size:10pt; padding-left:0;color:#4A90AB;"class="username"> Welcome, {{user.first_name}}</a>
@@ -27,7 +30,7 @@
                 
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                
+                <!--Navigation options and logout-->
                 <li><a href="{% url 'news' %}">News</a></li>
                 <li><a href="{% url 'events' %}">Events</a></li>
                 <li><a href="{% url 'donate' %}">Donate</a></li>
@@ -38,21 +41,22 @@
 
         </div>
     </nav>
-        
+    <!--This is a block which is a space for the template of each page-->
     {% block body %}
     {% endblock body %}
     
 
     
-
+        <!--Bootstrap footer-->
         <footer class="page-footer">
                     <ul class="nav navbar-nav navbar-left footer_link">
-
+                        <!--Footer links-->
                         <li><a href="{% url 'donate_history'%}">Donation History</a></li>
                         <li><a href="{% url 'liked_posts'%}">Liked Posts</a></li>
                     </ul>
             <!-- Copyright -->
             <div class="footer-copyright text-center py-3"> 
+                <!--Social media links-->
               <a style="float:right;font-size: 25px;padding-left:10px;padding-right:10px;" href="https://twitter.com/BarberInstitute?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor" class="fa fa-twitter"></a>
               <a style="float:right;font-size: 25px;" href="https://www.instagram.com/barberinstitute/?hl=en" class="fa fa-instagram"></a>
             </div>
@@ -61,6 +65,7 @@
           </footer>
     </body></html>
 
+<!--CSS STYLES FOR BASE PAGE AND PAGES THAT EXTEND BASE-->
 <style>
     .general_button{
         border-color: grey;

@@ -1,5 +1,6 @@
 <html lang="en">
     <head>
+        <!--Donation Success Page-->
         <title>Thank you!</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>    
@@ -11,10 +12,12 @@
         <meta name="google-signin-client_id" content="690223079482-m2l4j183j0u8bkmjn68ddgn76bgss975.apps.googleusercontent.com">
     </head>
     <body>
+        <!--Thanks the user for their donation and prompts them to Barber Tiles-->
         <h1 class="mb-5">Thank you</h1>
         <p>Thank you for your donation. <p>
         <button class="tiles"onclick="location.href='{% url "donate_tiles" %}'"class="barber_tiles_button">Barber Tiles</button>
     </body>
+<!--CSS FOR DOANTION SUCCESS PAGE-->
 <style>
     .tiles{
         border-color: grey;

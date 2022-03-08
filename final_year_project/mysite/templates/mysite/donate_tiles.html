@@ -1,25 +1,30 @@
 {% extends 'mysite/base.html' %}
+<!--Loads sorl thumbnail so we can crop the tiles to squares-->
 {% load thumbnail%}
 
-
+<!--Barber Tiles Page which extends Base-->
 {% block body %}
 
 <h1 class="tiles_header"> Barber Tiles <h1>
 <div class="tiles_container">
     <div class="tile-column">
+    <!--For loop through all tiles and displays only £1 doantions-->
     {% for tile in tiles%}
             {% if tile.amount == 1%}
             <div style"width:100;"class="row">
+                <!--Flip card enables the tile to flip frontwards and backwards-->
                 <div style="width:100;height:100;" class="flip-card">
                     <div class="flip-card-inner">
+                        <!--Front of flip card which is the users favourite image-->
                         <div class="flip-card-front">
-                            
+                            <!--Crops the image to square-->
                             {% thumbnail tile.fave_image "100x100" crop="center" as im %}
                             <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
                             {% empty %}
                             <img src="/media/images/default-image.jpg" width="100">
                             {% endthumbnail %}
                         </div>
+                        <!--Back of flip card which is users name and donation amount-->
                         <div style="width:100px;height:100px;" class="flip-card-back">
                             <h2 style="margin-top:30;font-size:10pt;" name="tile_name" class="tile_name">{{tile.first_name}} {{tile.last_name}}</h2>
                             <h2 style="font-size:10pt;"name="tile_name" class="tile_name">£{{tile.amount}}</h2>
@@ -32,6 +37,7 @@
     {%endfor%}
     </div>
     <div class="tile-column3">
+    <!--For loop through all tiles and displays only £10 doantions-->
         {% for tile in tiles%}
             {%if tile.amount == 10%}
             <div style"width:300;"class="row">
@@ -57,6 +63,8 @@
         {% endfor %}
     </div>
     <div class="tile-column2">
+    <!--For loop through all tiles and displays only £5 doantions-->
+
         {% for tile in tiles%}
             {%if tile.amount == 5%}
             <div style"width:200;"class="row">
