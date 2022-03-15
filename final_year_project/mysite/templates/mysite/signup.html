@@ -1,0 +1,87 @@
+{% load crispy_forms_tags %}
+
+<!--Create an account page-->
+<html lang="en">
+    <head>
+        <title>Create an account</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>        
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+    <body>
+    <section class="vh-100">
+        <div class="container py-5 h-100">
+          <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+              <div class="card shadow-2-strong" style="border-radius: 1rem;">
+                <div class="card-body p-5 text-center">
+                  
+                  <h3 class="mb-5">Create Account</h3>
+                  <!--Form which submits new account details-->
+                  <form method="POST">
+
+                    <div style="color:black;"class="outer-box">
+                    <!--Displays any messages that show the user the form was invalid-->
+                    <p style="color:red;">{{messages}}</p>
+
+                                        
+                    {% csrf_token %}
+                    {{ signup_form|crispy}}
+                  <!--Submit form-->
+                  <button class="btn btn-primary btn-lg btn-block" type="submit">Sign Up</button>
+                  <i class="arrow left"></i>
+                  <div>
+                    <!--Links to back to login-->
+                    <a class="login"style="float:left;padding-top:20px;" href="{% url 'login' %}">  Back to Login</a></li>
+                  </div>
+
+                    </div>
+                 
+                 </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </body>
+    </html>
+    
+    <!--CSS FOR CREATE AN ACCOUNT-->
+    <style>
+      .login:before {
+        content: ' \02C2';
+      }
+        .vh-100 {
+            position:absolute;
+            top: 40%;
+            left: 50%;
+            margin-top: -200px;
+            margin-left: -300px;
+        }
+    
+        .mb-5 {
+            margin-bottom: 100px;
+            font-size: 50px;
+        }
+        body {
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-weight: 300;
+            color:white;
+            background-image: url('https://www.codart.nl/wp-content/uploads/2020/09/BIFA-17th-century-Gallery-scaled.jpg');
+            background-repeat:repeat;
+            background-size:cover;
+        }
+    
+        .outer-box{
+            background-color:white;
+            padding-top:30px;
+            padding-left:30px;
+            padding-right:30px;
+            padding-bottom:50px;
+            border-colour: grey;
+        }
+    </style>

@@ -1,0 +1,70 @@
+<html lang="en">
+    <head>
+        <!--Donation Success Page-->
+        <title>Thank you!</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>    
+        <script src="https://apis.google.com/js/platform.js" async defer></script>     
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+        <link href='//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <meta name="google-signin-client_id" content="690223079482-m2l4j183j0u8bkmjn68ddgn76bgss975.apps.googleusercontent.com">
+    </head>
+    <body>
+        <!--Thanks the user for their donation and prompts them to Barber Tiles-->
+        <h1 class="mb-5">Thank you</h1>
+        <p>Thank you for your donation. <p>
+        <button class="tiles"onclick="location.href='{% url "donate_tiles" %}'"class="barber_tiles_button">Barber Tiles</button>
+    </body>
+<!--CSS FOR DOANTION SUCCESS PAGE-->
+<style>
+    .tiles{
+        border-color: grey;
+        color: black;
+        padding: 8px 32px;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin: 4px 2px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        border-radius:8px;
+    }
+    .tiles:hover{
+      background-color: #3786a6;
+      color:white;
+  }
+    p {
+        text-align: center;
+        margin:20px;
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        font-size:15pt;
+    }
+    body {
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        font-weight: 300;
+        color:white;
+        background-image: url('https://www.codart.nl/wp-content/uploads/2020/09/BIFA-17th-century-Gallery-scaled.jpg');
+        background-repeat:no-repeat;
+        background-size:cover;
+    }
+    .mb-5 {
+        font-size: 50px;
+        text-align:center;
+        margin-top:250px;
+    }
+    .barber_tiles_button {
+        border-color: grey;
+        color: black;
+        padding: 8px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        margin-top:20px;
+        transition-duration: 0.4s;
+        cursor: pointer;
+        border-radius:8px;
+    }
+</style>

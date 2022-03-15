@@ -1,0 +1,27 @@
+{% extends 'mysite/base.html' %}
+<!--Donation History Page which extends Base Page-->
+
+{% block body %}
+<!--Table of donations-->
+<table id="donations">
+    <tr>
+        <!--Table Column Headers-->
+        <th>Donation Amount</th>
+        <th>Date of Donation</th> 
+    </tr> 
+    <!--Loop through all user donations-->
+    {%for user_donation in user_donations%}
+    <tr> 
+        <!--Dispalys the amount underneath Donation Amount-->
+        <!--Displays the date underneath Donation Date-->
+        <td>£{{user_donation.amount}}.00</td>
+        <td>{{user_donation.date}}</td>
+    </tr>  
+    <!--If the user has no donations as of yet-->
+    {%empty%}
+    <p class="no_donations_text">You have not made any donations yet.</p>
+
+    {%endfor%}
+</table> 
+
+{% endblock body %}

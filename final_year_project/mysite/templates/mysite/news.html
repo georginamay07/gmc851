@@ -1,0 +1,65 @@
+{% extends 'mysite/base.html' %}
+
+<!--News page wich extens Base-->
+{% block body %}
+
+<!--Loops through each news article-->
+{% for article in articles %}
+    <div class="article">
+    <article>
+        <!--Form which submits comments-->
+        <form method="post">
+        {% csrf_token %}
+
+        <!--Hidden news ID-->
+        <input type="hidden" value={{article.pk}} name="pk">
+        <!--Displays news details-->
+        <h2 class="article_title">{{ article.title }}</h2>
+        <time class="article_time">published: {{ article.published_on }}</time>
+        <br></br>
+        <img class="article_image" src={{article.cover_image.url}} width=400></img>
+        <p class="article_content">{{ article.content|linebreaksbr }}</p>
+        <!--User submits there comments here-->
+        <br></br>
+            <div>
+            <textarea class="article_comments" name="comment" style="width:90%; float:left;" placeholder="Add a comment..." id="comments"></textarea>
+            </div>
+            <!--Submits the form-->
+            <input class="comment_submit" name="comment_submit" type="submit" value="Submit">
+        </form>
+        <!--Displays all of the news comments by published date-->
+        <section id="comments">
+        <ul style="list-style-type:none;padding-left:0px;padding-top:50px;margin:0;">
+            <!--Loops through each comment in the list of the article comments-->
+            {% for comment in article.comments.all %}
+            <li style="padding-top:20px;">
+                <!--Displays comment details-->
+                <a style="font-weight:bold;pointer-events: none;color:black;">{{comment.user_id}} </a>
+                <a style="pointer-events: none;color:black;">{{comment}}</a>
+                <!--For each comment, if the comment has been posted by the current user then display a delete button-->
+                <!--Ensures users can only delete their own comments, not others-->
+                {%if request.user == comment.user_id%}
+                <!--Form which deletes comments-->
+                <form method="POST">
+                    {% csrf_token %}
+                    <!--Hidden comment ID-->
+                    <input type="hidden" value={{comment.pk}} name="comment_pk">
+                    <!--Submits form-->
+                    <button type="submit" name="delete_comment" style="float:right;"class="delete_comment"><i class="fa fa-trash"></i></button>
+                </form>
+                {%endif%}
+                <a style="pointer-events: none;color:black;float:right;">{{comment.published_on}}</a>
+            </li>
+            {% empty %}
+            <!--If the article has no comments-->
+                <p class="no_comments_text">There are currently no comments.</p>
+            {% endfor %}
+        </ul>
+        </section>
+    </form>
+
+    </article>
+</div>
+{% endfor %}
+
+{% endblock body %}

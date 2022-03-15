@@ -1,0 +1,42 @@
+{% extends 'mysite/base.html' %}
+<!--Loads sorl thumbnail to crop post images-->
+{% load thumbnail%}
+
+<!--Liked Posts page which extends Base-->
+{% block body %}
+
+<!--Loop through each users liked post-->
+{% for post in liked_posts %}
+
+<div class="grid-container">
+    <div class="grid-item">
+        <div class="liked_posts">
+            <!--Form which submits unlike-->
+            <form method="POST">
+            {% csrf_token %}
+            <article>
+                <!--Displays post details-->
+                <input type="hidden" value={{post.pk}} name="pk">
+                <!--Crops cover image to 150x150 square-->
+                {% thumbnail post.cover_image "150x150" crop="center" as im %}
+                    <img src="{{ im.url }}" width="{{ im.width }}" height="{{ im.height }}">
+                {% empty %}
+                    <img src="/media/images/default-image.jpg" width="150">
+                {% endthumbnail %}
+
+                
+                <h2 class="liked_post_artist">{{ post.artist }}</h2>
+                <!--If user clicks Unlike, then the form is submitted-->    
+                <!--No like button needed as only liked posts are displayed-->            <
+                <button type="submit" name="unlike" class="unlike"><i class="fa fa-thumbs-down"></i>Unlike</button>
+            </article>
+            </form>
+        </div>
+    </div>
+</div>
+{% empty %}
+<!--If the user has no liked posts-->
+<p class="no_likes_text">You have not liked any posts yet.</p>
+{% endfor %}
+
+{% endblock body %}
