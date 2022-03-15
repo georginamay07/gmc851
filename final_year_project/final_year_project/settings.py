@@ -27,6 +27,7 @@ SECRET_KEY = 'django-insecure-xc-4_anf$8#t8=yo)20!(l%1d856xt3fird1p*wcw$+w2(@n-y
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 THUMBNAIL_DEBUG = True
+THUMBNAIL_PREFIX = 'CACHE/'
 
 ALLOWED_HOSTS = []
 #media url in order to save images etc.
@@ -58,7 +59,7 @@ INSTALLED_APPS = [
     'taggit',
     'crispy_forms',
     'sorl.thumbnail',
-    'defender',
+    'defender'
 ]
 
 

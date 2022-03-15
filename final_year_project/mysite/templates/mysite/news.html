@@ -37,6 +37,7 @@
                 <a style="font-weight:bold;pointer-events: none;color:black;">{{comment.user_id}} </a>
                 <a style="pointer-events: none;color:black;">{{comment}}</a>
                 <a style="pointer-events: none;color:black;float:right;">{{comment.published_on}}</a>
+
                 <!--For each comment, if the comment has been posted by the current user then display a delete button-->
                 <!--Ensures users can only delete their own comments, not others-->
                 {%if request.user == comment.user_id%}
