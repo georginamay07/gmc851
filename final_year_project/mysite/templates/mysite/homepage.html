@@ -19,9 +19,9 @@
             <button class="filter_button" id="filter_button2" onclick="location.href='{% url "home_like" %}'" name="like_count">Most Popular</button>
         {% endif %}
         {% if url == "newist" %}
-            <button class="filter_button active" id="filter_button3" onclick="location.href='{% url "home" %}'" name="published">Newist</button>
+            <button class="filter_button active" id="filter_button3" onclick="location.href='{% url "home" %}'" name="published">Newest</button>
         {% else %}
-            <button class="filter_button" id="filter_button3" onclick="location.href='{% url "home" %}'" name="published">Newist</button>
+            <button class="filter_button" id="filter_button3" onclick="location.href='{% url "home" %}'" name="published">Newest</button>
         {% endif %}
 
     </div>  
