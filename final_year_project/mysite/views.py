@@ -1,3 +1,7 @@
+from axes.decorators import axes_dispatch
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+
 from datetime import date
 from django.http import HttpResponse
 from django.contrib.auth.forms import AuthenticationForm
@@ -18,7 +22,6 @@ from django.db.models import Count
 from django.utils import timezone
 from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
-
 #Import all models
 
 from .models import Article
@@ -303,7 +306,6 @@ def liked_posts(request):
 
 #Login
 #--This deals with user login
-
 def my_login(request):
     #messages are used to show if the user has failed to login for any reason
     messages=""
@@ -316,7 +318,7 @@ def my_login(request):
             password = form.cleaned_data.get('password')
             #built in function that authenticates the user
             #password is encrypted using SHA256
-            user = authenticate(username=username, password=password)
+            user = authenticate(request, username=username, password=password)
             if user is not None:
                 #this logs the user in
                 login(request, user)

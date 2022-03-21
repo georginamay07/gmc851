@@ -59,9 +59,17 @@ INSTALLED_APPS = [
     'taggit',
     'crispy_forms',
     'sorl.thumbnail',
-    'defender'
+    'axes',
+
 ]
 
+AUTHENTICATION_BACKENDS = [
+    # AxesBackend should be the first backend in the AUTHENTICATION_BACKENDS list.
+    'axes.backends.AxesBackend',
+
+    # Django ModelBackend is the default authentication backend.
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 CRISPY_TEMPLATE_PACK =  'bootstrap4'
 
@@ -91,6 +99,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'axes.middleware.AxesMiddleware',
+
 
 
 ]
