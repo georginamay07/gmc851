@@ -1,8 +1,13 @@
 
+from queue import Empty
 from django.test import TestCase
 from django.urls import reverse
 from django.test import TestCase
+from pyparsing import empty
 from .models import Post, Article, Event, Donation, BarberTile, LikedTag, Comment, Image, User
+from django.utils import timezone
+from django.db.models.query_utils import Q
+from django.db.models import Count
 
 from django.contrib.auth import login, authenticate, logout
 
@@ -89,28 +94,39 @@ class published_posts(TestCase):
         
         test_user = User.objects.create_user(username='testuser1')
         test_user.save()
-        Post.objects.create(artist="Test Artist",content="Test Content")
-
+        Post.objects.create(artist="Test Artist",content="Test Content", published_on=timezone.now(), cover_image = 'test.jpg')
+        Post.objects.create(artist='Test Artist 1', content ="Test Content 1", published_on=timezone.now(),cover_image = 'test.jpg')
+        Post.objects.create(artist="Test Artist 2", content = "Test Content 2", published_on=timezone.now(),cover_image = 'test.jpg')
         
-    def test(self):
+    def test_post_filter_published(self):
         self.client.force_login(User.objects.get(id=1))
         url = reverse('home')
         response = self.client.get(url)
         self.assertEqual(response.status_code,200)
-        #self.assertIn(posts, response.content)
+        posts = Post.objects.filter(published_on__lte=timezone.now()).order_by('published_on')
+        self.assertQuerysetEqual(posts, Post.objects.all())
 
+        
 class most_liked_posts(TestCase):
     
     def setUp(self):
         
         test_user = User.objects.create_user(username='testuser1')
         test_user.save()
+        Post.objects.create(artist="Test Artist",content="Test Content", published_on=timezone.now(), cover_image = 'test.jpg', number_of_likes=1)
+        Post.objects.create(artist='Test Artist 1', content ="Test Content 1", published_on=timezone.now(),cover_image = 'test.jpg', number_of_likes=2)
+        Post.objects.create(artist="Test Artist 2", content = "Test Content 2", published_on=timezone.now(),cover_image = 'test.jpg', number_of_likes=3)
         
-    def test(self):
+    def test_post_filter_most_liked(self):
         self.client.force_login(User.objects.get(id=1))
         url = reverse('home_like')
         response = self.client.get(url)
         self.assertEqual(response.status_code,200)
+        posts = Post.objects.filter(published_on__lte=timezone.now()).order_by('-number_of_likes')
+        self.assertEqual(posts[0].number_of_likes, 3)
+        self.assertEqual(posts[1].number_of_likes, 2)
+        self.assertEqual(posts[2].number_of_likes, 1)
+    
         
 class recommended_posts(TestCase):
     
@@ -118,40 +134,69 @@ class recommended_posts(TestCase):
         
         test_user = User.objects.create_user(username='testuser1')
         test_user.save()
-        
-    def test(self):
+        post1 = Post.objects.create(artist="Test Artist",content="Test Content",cover_image = 'test.jpg')
+        post2 = Post.objects.create(artist='Test Artist 1', content ="Test Content 1",cover_image = 'test.jpg')
+        post3 = Post.objects.create(artist="Test Artist 2", content = "Test Content 2",cover_image = 'test.jpg')
+        post1.tags.add('test','other')
+        post2.tags.add('test1','other')
+        post3.tags.add('test2','other')
+        liked_tags_instance = LikedTag.objects.create(user_id = test_user)
+        liked_tags_instance.tags.add('test1')
+                
+    def test_recommended_filtering(self):
         self.client.force_login(User.objects.get(id=1))
         url = reverse('home_recommended')
         response = self.client.get(url)
         self.assertEqual(response.status_code,200)
+        user = User.objects.get(id=1)
+        user_tags = LikedTag.objects.get(user_id=user).tags.all()
+        tag_list=[]
+        i = 0
+        for item in user_tags:
+            tag = str(user_tags[i])
+            tag_list.append(tag)
+            i+=1
+        posts = Post.objects.filter(~Q(like=user)).annotate(similar_tags=Count('tags', filter=Q(tags__in=user_tags))).order_by('-similar_tags')
+        self.assertEqual(posts[0].artist, 'Test Artist 1')
+        self.assertEqual(posts[1].artist, 'Test Artist')
+        self.assertEqual(posts[2].artist, 'Test Artist 2')
         
-        
-class news(TestCase):
+class events_posts(TestCase):
     
     def setUp(self):
         
         test_user = User.objects.create_user(username='testuser1')
         test_user.save()
+        Event.objects.create(title="Test Title",content="Test Content", date = timezone.now(),cover_image = 'test.jpg')
+        Event.objects.create(title='Test Title 1', content ="Test Content 1", date = timezone.now(),cover_image = 'test.jpg')
+        Event.objects.create(title="Test Title 2", content = "Test Content 2", date = timezone.now(),cover_image = 'test.jpg')
         
-    def test(self):
-        self.client.force_login(User.objects.get(id=1))
-        url = reverse('news')
-        response = self.client.get(url)
-        self.assertEqual(response.status_code,200)
-        
-class events(TestCase):
-    
-    def setUp(self):
-        
-        test_user = User.objects.create_user(username='testuser1')
-        test_user.save()
-        
-    def test(self):
+    def test_events_filter(self):
         self.client.force_login(User.objects.get(id=1))
         url = reverse('events')
         response = self.client.get(url)
         self.assertEqual(response.status_code,200)
+        events = Event.objects.order_by('date')
+        self.assertQuerysetEqual(events, Event.objects.all())            
+
+class news_posts(TestCase):
+    
+    def setUp(self):
         
+        test_user = User.objects.create_user(username='testuser1')
+        test_user.save()
+        Article.objects.create(title="Test Title",content="Test Content", published_on=timezone.now(), cover_image = 'test.jpg')
+        Article.objects.create(title='Test Title 1', content ="Test Content 1", published_on=timezone.now(),cover_image = 'test.jpg')
+        Article.objects.create(title="Test Title 2", content = "Test Content 2", published_on=timezone.now(),cover_image = 'test.jpg')
+        
+    def test_news_filter(self):
+        self.client.force_login(User.objects.get(id=1))
+        url = reverse('news')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code,200)
+        news = Article.objects.filter(published_on__lte=timezone.now()).order_by('published_on')
+        self.assertQuerysetEqual(news, Article.objects.all()) 
+
 class donate(TestCase):
     
     def setUp(self):
@@ -184,13 +229,24 @@ class donate_history(TestCase):
         
         test_user = User.objects.create_user(username='testuser1')
         test_user.save()
+        Donation.objects.create(user_id = test_user, amount="1", first_name = "Test Name", last_name = "Last Name",date=timezone.now())
+        Donation.objects.create(user_id = test_user, amount="5", first_name = "Test Name 1", last_name = "Last Name 1",date=timezone.now())
+        Donation.objects.create(user_id = test_user, amount="10", first_name = "Test Name 2", last_name = "Last Name 2",date=timezone.now())
+
         
-    def test(self):
+    def test_donation_history(self):
         self.client.force_login(User.objects.get(id=1))
+        user = User.objects.get(id=1)
         url = reverse('donate_history')
         response = self.client.get(url)
         self.assertEqual(response.status_code,200)
-        
+        donations = Donation.objects.prefetch_related().all()
+        for i in donations:
+            user_donations = Donation.objects.filter(user_id = user)
+        self.assertEqual(user_donations[0].amount, 1)
+        self.assertEqual(user_donations[1].amount, 5)
+        self.assertEqual(user_donations[2].amount, 10)
+
 class liked_posts(TestCase):
     
     def setUp(self):
@@ -204,9 +260,29 @@ class liked_posts(TestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code,200)
      
-         
-class test_post_functions(TestCase):
+class test_news_functions(TestCase):
     
+    def setUp(self):
+        test_user = User.objects.create_user(username='testuser1')
+        test_user.save()
+        Article.objects.create(title="Test Article",content="Test Content")
+        Comment.objects.create(comment='test comment', user_id = test_user)
+
+    def test_news_comment(self):
+        this_article = Article.objects.get(id=1)
+        comment = Comment.objects.get(id=1)
+        this_article.comments.add(comment)
+        self.assertEqual(this_article.comments.all()[0], comment)
+        
+    def test_news_comment_delete(self):
+        this_article = Article.objects.get(id=1)
+        comment = Comment.objects.get(id=1)
+        this_article.comments.add(comment)
+        comment.delete()
+        self.assertQuerysetEqual(this_article.comments.all(), Comment.objects.all())  
+       
+class test_post_functions(TestCase):
+
     def setUp(self):
         test_user = User.objects.create_user(username='testuser1')
         test_user.save()
@@ -217,12 +293,14 @@ class test_post_functions(TestCase):
         this_post = Post.objects.get(id=1)
         comment = Comment.objects.get(id=1)
         this_post.comments.add(comment)
+        self.assertEqual(this_post.comments.all()[0], comment)
         
     def test_comment_delete(self):
         this_post = Post.objects.get(id=1)
         comment = Comment.objects.get(id=1)
         this_post.comments.add(comment)
         comment.delete()
+        self.assertQuerysetEqual(this_post.comments.all(), Comment.objects.all())
         
     def test_like_post(self):
         this_post = Post.objects.get(id=1)
@@ -244,6 +322,7 @@ class test_post_functions(TestCase):
         this_post.number_of_likes -= 1
         this_post.save()
         this_post.like.remove(user)
+        self.assertQuerysetEqual(this_post.like.all(), this_post.like.none())
         self.assertEqual(this_post.number_of_likes, 0)
         
     def test_liked_tags(self):
