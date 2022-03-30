@@ -298,6 +298,7 @@ def liked_posts(request):
     #GET REQUEST
     #gets all posts
     posts = Post.objects.filter(published_on__lte=timezone.now()).order_by('published_on')
+    liked_posts=None
     #gets only posts that have been liked by the user
     for i in posts:
         liked_posts = Post.objects.filter(like = request.user)
