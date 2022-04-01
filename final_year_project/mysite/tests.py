@@ -201,7 +201,7 @@ class donate(TestCase):
     
     def setUp(self):
         
-        test_user = User.objects.create_user(username='testuser1')
+        test_user = User.objects.create_user(username='testuser1', first_name = "Test Name", last_name = "Last Name")
         test_user.save()
         
     def test(self):
@@ -209,19 +209,66 @@ class donate(TestCase):
         url = reverse('donate')
         response = self.client.get(url)
         self.assertEqual(response.status_code,200)
-        
-class donate_tiles(TestCase):
-    
-    def setUp(self):
-        
-        test_user = User.objects.create_user(username='testuser1')
-        test_user.save()
-        
-    def test(self):
-        self.client.force_login(User.objects.get(id=1))
-        url = reverse('donate_tiles')
-        response = self.client.get(url)
-        self.assertEqual(response.status_code,200)
+        user = User.objects.get(id=1)
+        json1 = {'amount':'1', 'fave_image':'test_image.jpg'}
+        json2 = {'amount':'5', 'fave_image':''}
+        json3 = {'amount':'10', 'fave_image':'test_image1.jpg'}
+        if json1['amount'] == '1':
+                Donation.objects.create(amount=1, user_id=user, first_name=user.first_name, last_name=user.last_name)
+                if json1['fave_image'] != '':
+                    url = "images/tiles/" + json1['fave_image']
+                    BarberTile.objects.create(fave_image=url,first_name=user.first_name, last_name=user.last_name, amount=1)
+
+        if json1['amount'] == '5':
+            Donation.objects.create(amount=5, user_id=user, first_name=user.first_name, last_name=user.last_name)
+            if json1['fave_image'] != '':
+                url = "images/tiles/" + json1['fave_image']
+                BarberTile.objects.create(fave_image=url,first_name=user.first_name, last_name=user.last_name, amount=5)
+
+        if json1['amount'] == '10':
+            Donation.objects.create(amount=10, user_id=user, first_name=user.first_name, last_name=user.last_name) 
+            if json1['fave_image'] != '':
+                url = "images/tiles/" + json1['fave_image']
+                BarberTile.objects.create(fave_image=url,first_name=user.first_name, last_name=user.last_name, amount=10)
+        if json2['amount'] == '1':
+                Donation.objects.create(amount=1, user_id=user, first_name=user.first_name, last_name=user.last_name)
+                if json2['fave_image'] != '':
+                    url = "images/tiles/" + json2['fave_image']
+                    BarberTile.objects.create(fave_image=url,first_name=user.first_name, last_name=user.last_name, amount=1)
+
+        if json2['amount'] == '5':
+            Donation.objects.create(amount=5, user_id=user, first_name=user.first_name, last_name=user.last_name)
+            if json2['fave_image'] != '':
+                url = "images/tiles/" + json2['fave_image']
+                BarberTile.objects.create(fave_image=url,first_name=user.first_name, last_name=user.last_name, amount=5)
+
+        if json2['amount'] == '10':
+            Donation.objects.create(amount=10, user_id=user, first_name=user.first_name, last_name=user.last_name) 
+            if json2['fave_image'] != '':
+                url = "images/tiles/" + json2['fave_image']
+                BarberTile.objects.create(fave_image=url,first_name=user.first_name, last_name=user.last_name, amount=10)    
+        if json3['amount'] == '1':
+                Donation.objects.create(amount=1, user_id=user, first_name=user.first_name, last_name=user.last_name)
+                if json3['fave_image'] != '':
+                    url = "images/tiles/" + json3['fave_image']
+                    BarberTile.objects.create(fave_image=url,first_name=user.first_name, last_name=user.last_name, amount=1)
+
+        if json3['amount'] == '5':
+            Donation.objects.create(amount=5, user_id=user, first_name=user.first_name, last_name=user.last_name)
+            if json3['fave_image'] != '':
+                url = "images/tiles/" + json3['fave_image']
+                BarberTile.objects.create(fave_image=url,first_name=user.first_name, last_name=user.last_name, amount=5)
+
+        if json3['amount'] == '10':
+            Donation.objects.create(amount=10, user_id=user, first_name=user.first_name, last_name=user.last_name) 
+            if json3['fave_image'] != '':
+                url = "images/tiles/" + json3['fave_image']
+                BarberTile.objects.create(fave_image=url,first_name=user.first_name, last_name=user.last_name, amount=10)
+        tiles = BarberTile.objects.prefetch_related().all()
+        self.assertEqual(tiles[0].amount, 1)
+        self.assertEqual(tiles[1].amount, 10)
+        self.assertEqual(tiles[0].fave_image, "images/tiles/test_image.jpg")
+        self.assertEqual(tiles[1].fave_image, "images/tiles/test_image1.jpg")       
         
 class donate_history(TestCase):
     
@@ -253,12 +300,24 @@ class liked_posts(TestCase):
         
         test_user = User.objects.create_user(username='testuser1')
         test_user.save()
+        post1 = Post.objects.create(artist="Test Artist",content="Test Content",cover_image = 'test.jpg')
+        post2 = Post.objects.create(artist='Test Artist 1', content ="Test Content 1",cover_image = 'test.jpg')
+        post3 = Post.objects.create(artist="Test Artist 2", content = "Test Content 2",cover_image = 'test.jpg')
+        post1.like.add(test_user)
+        post3.like.add(test_user)
         
     def test(self):
         self.client.force_login(User.objects.get(id=1))
         url = reverse('liked_posts')
         response = self.client.get(url)
         self.assertEqual(response.status_code,200)
+        user = User.objects.get(id=1)
+        posts = Post.objects.all()
+        liked_posts = None
+        for i in posts:
+            liked_posts = Post.objects.filter(like = user)
+        self.assertEqual(liked_posts[0].artist, 'Test Artist')
+        self.assertEqual(liked_posts[1].artist, 'Test Artist 2')
      
 class test_news_functions(TestCase):
     
